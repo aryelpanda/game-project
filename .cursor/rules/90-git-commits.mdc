@@ -7,12 +7,22 @@ alwaysApply: true
 
 Remote: `https://github.com/aryelpanda/game-project.git`
 
+## Version Control Model
+
+Every **commit** is a restorable snapshot. Pushing sends those snapshots to GitHub, where the full history is kept forever (unless force-pushed).
+
+- **Commit before push.** Never push uncommitted work as the only saved state.
+- **One logical change per commit** when possible — makes reverting a single feature or fix easy.
+- **Descriptive commit messages** — future you (or AI) must understand what changed and why.
+- **Do not force-push** `main` unless the user explicitly requests it. Force-push erases remote history.
+
 ## Required Behavior
 
 - **NEVER commit without explicit user permission.**
 - After completing any code or doc change, **ask the user** whether they want a commit.
 - Do not stage or commit proactively, even if changes look ready.
 - Only commit when the user says yes (e.g. "commit", "yes, commit", "go ahead and commit").
+- After a successful commit, **ask the user** whether they want to push.
 
 ## When the User Approves a Commit
 
@@ -22,8 +32,38 @@ Remote: `https://github.com/aryelpanda/game-project.git`
 4. Commit, then run `git status` to verify success.
 5. Do **not** push unless the user explicitly asks.
 
+## When the User Approves a Push
+
+1. Confirm there is at least one new commit since the last push (`git log origin/main..HEAD`).
+2. Push with SSL workaround if needed:
+   `git -c http.sslBackend=schannel -c http.schannelCheckRevoke=false push`
+3. Verify with `git status` (branch should be up to date with `origin/main`).
+
+## Reverting (Reference)
+
+| Goal | Command |
+| ---- | ------- |
+| Undo one commit safely (keeps history) | `git revert <commit-hash>` |
+| Restore one file from an old commit | `git checkout <commit-hash> -- path/to/file` |
+| View history | `git log --oneline` |
+| Jump to old state locally (read-only) | `git checkout <commit-hash>` |
+
+Never run `git reset --hard` or force-push without explicit user approval.
+
+## Milestone Tags (Optional)
+
+When the user approves a milestone (e.g. M3 complete), suggest tagging:
+
+```
+git tag -a v0.3-m3-horde -m "M3 horde run loop complete"
+git push origin v0.3-m3-horde
+```
+
+Tags are permanent bookmarks for important versions.
+
 ## Forbidden
 
 - Committing without permission.
 - Pushing without permission.
 - Amending or force-pushing without explicit request.
+- Squashing or rewriting history on `main` without explicit request.

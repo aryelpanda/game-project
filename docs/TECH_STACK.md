@@ -70,8 +70,17 @@ Real Aseprite art work begins in M9.A (content buildout) and M9.C (feel & polish
 | Area | Choice | Notes |
 | ---- | ------ | ----- |
 | Source control | Git | Required for production safety. |
+| Remote | GitHub (`aryelpanda/game-project`) | HTTPS push; full commit history stored on GitHub. |
 | Large binaries | Git LFS | Use for `.png`, `.aseprite`, `.wav`, `.ogg`, `.psd`, large exported art/audio. |
 | Ignored folders | `.godot/`, `.import/`, temporary exports | Keep generated files out of version control. |
+
+### Workflow
+
+1. **Commit** — each commit is a restorable snapshot with a message describing the change.
+2. **Push** — uploads commits to GitHub; nothing is lost from history unless force-pushed.
+3. **Revert** — use `git revert <hash>` to undo a commit safely, or `git checkout <hash> -- <file>` to restore a single file.
+
+One logical change per commit when possible. Tag milestones (e.g. `v0.3-m3-horde`) for important versions. See `.cursor/rules/90-git-commits.mdc` for AI commit/push policy.
 
 ## Steam Stack
 
