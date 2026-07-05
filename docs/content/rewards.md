@@ -1,6 +1,6 @@
 # Level-Up Rewards Content Index
 
-Version: 0.1
+Version: 0.2
 
 > Index of temporary run Spells and Buffs used in level-up choices. Design notes live here; gameplay values live in `.tres` files under `content/`.
 
@@ -45,6 +45,19 @@ Enemy skills live in `content/enemy_skills/` and must never be added to reward p
 | `auto_projectile` | Fires on cooldown via `RunSpellController`; no mana. |
 | `orbit_aura` | Orbiting contact damage around the player. |
 
+## M5 Planned — Reward Leveling (Five Minute Gauntlet)
+
+When the same reward is picked again from the level-up pool:
+
+| ID | Repeat-pick effect |
+| -- | ------------------ |
+| `attack_power_boost` | Stack another +25% `attack_power` |
+| `big_fireball` | +1 fireball per cooldown volley |
+| `orbiting_star` | +1 orbiting star |
+
+Implementation deferred until M5 build starts. See [maps.md](maps.md) and [ROADMAP.md](../ROADMAP.md) M5.
+
 ## Changelog
 
+- v0.2 - M5 reward leveling rules documented (planned, not implemented).
 - v0.1 - M4 test rewards index and add-reward workflow.

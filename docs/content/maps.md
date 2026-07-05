@@ -1,6 +1,6 @@
 # Maps Gameplay Index
 
-Version: 0.2
+Version: 0.3
 
 > Index of gameplay designs for maps. Use [map_design_template.md](map_design_template.md) before creating any `MapData` Resource.
 
@@ -17,6 +17,7 @@ Version: 0.2
 | Map ID | Display Name | Tier | Status | Resource | Notes |
 | ------ | ------------ | ---- | ------ | -------- | ----- |
 | test_arena | Test Arena | tutorial | Implemented | `content/maps/test_arena.tres` | Single `test_grunt` horde, ramping spawn curve, death ends run. M3 dev map. |
+| five_minute_gauntlet | Five Minute Gauntlet | tutorial | Designed | _(not created yet)_ | M5 first intentional map. 5-min timed victory, compounding spawn, tank enemy. |
 
 ## Map Status Legend
 
@@ -29,6 +30,78 @@ Version: 0.2
 | Balanced | Difficulty and rewards are close to target. |
 | Locked | Do not change without approval. |
 
+---
+
+## Five Minute Gauntlet — Gameplay Design (M5)
+
+Approved design. **Not implemented yet.** See [ROADMAP.md](../ROADMAP.md) M5.
+
+### 1. Map Identity
+
+- **Map ID:** `five_minute_gauntlet`
+- **Display Name:** Five Minute Gauntlet
+- **Difficulty Tier:** tutorial
+- **Expected Run Duration:** 5 minutes (300 seconds)
+- **Unlock Requirement:** none (first designed map)
+- **MapData Resource:** `content/maps/five_minute_gauntlet.tres` _(planned)_
+- **SpawnCurve Resource:** `content/spawn_curves/five_minute_gauntlet_curve.tres` _(planned)_
+
+### 2. Gameplay Fantasy
+
+Survive a fixed 5-minute gauntlet while horde pressure ramps every minute. Level-up rewards can be picked again to **upgrade** existing spells and buffs instead of only collecting new ones.
+
+### 3. Primary Gameplay Twist
+
+- **Timed victory:** run ends automatically at 5:00 with a success summary (`time_up`).
+- **Compounding spawn pressure:** +35% spawn rate each minute (minute N multiplier = 1.35^N on base interval).
+- **Reward leveling:** re-picking a spell or buff from the level-up pool increases its power.
+
+### 4. Win / Lose Conditions
+
+| Condition | Result |
+| --------- | ------ |
+| Survive 300 seconds | Victory (`time_up`) |
+| Player dies | Defeat (`death`) |
+
+### 5. Spawn Pressure
+
+- Base spawn interval: ~4.0s at minute 0 (tunable in spawn curve).
+- **+35% spawn rate per minute** (compounding): `effective_interval = base / pow(1.35, floor(elapsed / 60))`
+- Phases at 0 / 60 / 120 / 180 / 240s also raise `max_concurrent` (e.g. 5 → 8 → 12 → 16 → 20).
+
+### 6. Enemy Roster
+
+| ID | Visual | HP | Spawn weight | Notes |
+| -- | ------ | -- | ------------ | ----- |
+| `test_grunt` | Red square (existing) | 40 | 1.0 | Baseline horde enemy |
+| `tank_grunt` | Blue square | 80 (2× grunt) | 0.3 (~70% less often than grunt) | New M5 enemy; same melee skill pattern |
+
+Planned Resources: `content/stats/tank_grunt.tres`, `content/enemies/tank_grunt.tres`.
+
+### 7. Level-Up Rewards (M4 pool, M5 leveling rules)
+
+Uses existing M4 test reward pool. On repeat pick:
+
+| Reward | Level-up effect |
+| ------ | --------------- |
+| `attack_power_boost` | Stack another +25% attack power |
+| `big_fireball` | +1 fireball fired per cooldown tick |
+| `orbiting_star` | +1 orbiting star |
+
+### 8. Planned Code Changes (implementation checklist)
+
+When M5 build starts on branch `m5-data-driven-content`:
+
+- `MapData.run_duration_seconds`
+- `EnemyData.spawn_weight`, `EnemyData.tint_color`
+- `SpawnCurveData.spawn_rate_growth_per_minute`
+- Weighted pick in `HordeSpawner`
+- Spell upgrade + buff stacking in `RunSpellController`, `BuffContainer`, `RunManager`
+- Timed victory in `RunManager`; summary UI shows victory vs defeat
+- Wire default run to `five_minute_gauntlet` in `scenes/main/main.gd`
+
+---
+
 ## Adding a Map
 
 1. Add a row to **Map List**.
@@ -39,5 +112,6 @@ Version: 0.2
 
 ## Changelog
 
+- v0.3 - added `five_minute_gauntlet` M5 design (planned, not implemented).
 - v0.2 - added `test_arena` M3 dev map entry.
 - v0.1 - initial map gameplay index

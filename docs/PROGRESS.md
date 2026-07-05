@@ -1,6 +1,6 @@
 # PROGRESS.md
 
-Version: 0.14
+Version: 0.15
 
 > Snapshot of where every system stands. Update this in the SAME change that advances a system (see [.cursor/rules/80-docs-sync.mdc](../.cursor/rules/80-docs-sync.mdc)).
 
@@ -47,6 +47,8 @@ Version: 0.14
 
 Active milestone: **M5 — Data-Driven Content** (see [ROADMAP.md](ROADMAP.md)). M0–M4 are Done.
 
+**M5 status:** Design approved for first map ([Five Minute Gauntlet](content/maps.md)). **Implementation not started** — waiting for explicit approval to create `m5-data-driven-content` branch.
+
 Blocking issues: _(none yet)_
 
 ---
@@ -62,6 +64,7 @@ When a system changes state:
 
 ## Changelog
 
+- v0.15 - M5 Five Minute Gauntlet design approved; implementation not started.
 - v0.14 - M4 XP & Level-Up Choices: BuffData, StatModifier, RewardPoolData, RunProgressionData, level-up UI, RunPowersPanel, three test rewards. Active milestone advanced to M5.
 - v0.13 - M3 Horde & Run Loop: RunManager + World autoloads, MapData/SpawnCurveData, HordeSpawner, run HUD/summary UI, test_arena content. Active milestone advanced to M4.
 - v0.11 - enemies system design revised: per-enemy stat block and required skill(s) documented; runtime still not started.

@@ -1,6 +1,6 @@
 # ROADMAP.md
 
-Version: 0.10
+Version: 0.13
 
 > Milestones are ordered by **dependency**, not calendar. Do not skip ahead. Each milestone should be shippable-in-principle: it either compiles and runs cleanly, or it doesn't get merged.
 
@@ -91,19 +91,33 @@ Goal: killing enemies gives XP, levels the player, and offers 3 random temporary
 
 ---
 
-## M5 — Data-Driven Content  `Status: Not Started`
+## M5 — Data-Driven Content  `Status: Design Approved — Not Started`
 
-Goal: gameplay values move from code to Resources.
+Goal: gameplay values move from code to Resources. First intentional map: **Five Minute Gauntlet** (see [content/maps.md](content/maps.md)).
 
-- [ ] `SpellData` / `AbilityData` Resource. First temporary spells defined as `.tres`.
-- [ ] `BuffData` Resource. First temporary buffs defined as `.tres`.
-- [ ] `EnemyData` Resource. First enemy types defined as `.tres`.
-- [ ] `MapData` Resource. First map / arena defined as `.tres`.
-- [ ] First map gameplay design created from [content/map_design_template.md](content/map_design_template.md).
-- [ ] First map listed in [content/maps.md](content/maps.md).
-- [ ] `RewardPoolData` Resource for 3-choice level-up rewards.
-- [ ] `StatsData` Resource used by Player and Enemy.
-- [ ] No hardcoded damage / health / cooldowns remain in code.
+> **Planning only.** M5 design is approved below. Do **not** start the `m5-data-driven-content` branch or write implementation code until explicitly requested.
+
+### Already done (M2–M4 baseline)
+
+- [x] `SpellData` Resource + test spells in `content/spells/*.tres`
+- [x] `BuffData` Resource + test buffs in `content/buffs/*.tres`
+- [x] `EnemyData` Resource + `test_grunt` in `content/enemies/*.tres`
+- [x] `MapData` Resource + `test_arena` dev map
+- [x] `RewardPoolData` + `m4_test_rewards` pool
+- [x] `StatsData` used by Player and Enemy
+
+### M5 implementation (when build starts)
+
+- [x] First map gameplay design documented (Five Minute Gauntlet)
+- [x] First map listed in [content/maps.md](content/maps.md) as **Designed**
+- [ ] Implement `five_minute_gauntlet` map, spawn curve, and content `.tres` files
+- [ ] Run duration limit (`time_up` victory at 5:00)
+- [ ] Compounding spawn pressure (+35% spawn rate per minute)
+- [ ] Weighted enemy spawn (tank_grunt at 30% weight vs test_grunt)
+- [ ] New enemy: `tank_grunt` — blue square, 2× HP (80), melee skill
+- [ ] Spell/buff **leveling** on repeat level-up picks (stack buffs, upgrade spells)
+- [ ] Big Fireball: +1 projectile per level; Orbiting Star: +1 star per level
+- [ ] No hardcoded damage / health / cooldowns remain in code (audit pass)
 
 ---
 
@@ -271,6 +285,7 @@ Goal: 1.0 release.
 
 ## Changelog
 
+- v0.13 - M5 design approved: Five Minute Gauntlet first map spec, spell/buff leveling, tank enemy. Implementation not started.
 - v0.12 - added milestone branching rules (branch per M#, tag on merge for rollback).
 - v0.11 - M4 XP & Level-Up Choices completed: RunProgressionData, reward pools, BuffData, level-up UI, RunPowersPanel, three test rewards.
 - v0.10 - M3 Horde & Run Loop completed: RunManager, World/MapData, HordeSpawner, run HUD/summary, checkpoint export stub. Map Selection UI deferred to M6.
