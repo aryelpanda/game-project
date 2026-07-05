@@ -20,6 +20,7 @@ var _character_id: StringName = &""
 var _elapsed_seconds: float = 0.0
 var _kill_count: int = 0
 var _total_damage_done: float = 0.0
+var _spell_damage: Dictionary = {}
 var _damage_taken: float = 0.0
 var _xp_collected: int = 0
 var _current_xp: int = 0
@@ -47,6 +48,11 @@ func _process(delta: float) -> void:
 
 	_elapsed_seconds += delta
 	run_timer_changed.emit(_elapsed_seconds)
+
+	var map_data := World.get_current_map_data()
+	if map_data and map_data.run_duration_seconds > 0.0:
+		if _elapsed_seconds >= map_data.run_duration_seconds:
+			end_run(&"time_up")
 
 
 func start_run(map_id: StringName, character_id: StringName) -> void:
@@ -76,9 +82,9 @@ func end_run(reason: StringName) -> RunSummary:
 
 	_state = RunState.ENDED
 	_stop_horde_spawner()
-	_clear_player_run_powers()
 
 	var summary := _build_summary(reason)
+	_clear_player_run_powers()
 	run_ended.emit(summary)
 
 	var checkpoint := to_checkpoint_dict()
@@ -140,6 +146,13 @@ func grant_all_test_rewards() -> void:
 	run_powers_changed.emit()
 
 
+func end_run_for_testing() -> void:
+	if _state != RunState.ACTIVE and _state != RunState.LEVEL_UP_CHOICE:
+		return
+
+	end_run(&"debug_end")
+
+
 func register_enemy_kill(enemy_data: EnemyData) -> void:
 	if _state != RunState.ACTIVE or not enemy_data:
 		return
@@ -149,11 +162,16 @@ func register_enemy_kill(enemy_data: EnemyData) -> void:
 	add_experience(enemy_data.xp_reward)
 
 
-func register_spell_damage(_spell_id: StringName, amount: float) -> void:
+func register_spell_damage(spell_id: StringName, amount: float) -> void:
 	if _state != RunState.ACTIVE:
 		return
 
+	if amount <= 0.0:
+		return
+
 	_total_damage_done += amount
+	if spell_id != &"":
+		_spell_damage[spell_id] = _spell_damage.get(spell_id, 0.0) + amount
 
 
 func current_kill_count() -> int:
@@ -354,22 +372,46 @@ func _generate_level_up_options() -> Array:
 
 
 func _make_spell_option(spell: SpellData) -> Dictionary:
+	var next_level := 1
+	var player := _find_player()
+	if player and player.has_method("get_run_spell_level"):
+		var current_level: int = player.get_run_spell_level(spell.id)
+		if current_level > 0:
+			next_level = current_level + 1
+
+	var display_name := spell.display_name
+	if next_level > 1:
+		display_name = "%s (Lv %d)" % [spell.display_name, next_level]
+
 	return {
 		"type": &"spell",
 		"id": spell.id,
-		"display_name": spell.display_name,
+		"display_name": display_name,
 		"description": spell.description,
 		"resource": spell,
+		"next_level": next_level,
 	}
 
 
 func _make_buff_option(buff: BuffData) -> Dictionary:
+	var next_level := 1
+	var player := _find_player()
+	if player and player.has_method("get_buff_stack_count"):
+		var current_stacks: int = player.get_buff_stack_count(buff.id)
+		if current_stacks > 0:
+			next_level = current_stacks + 1
+
+	var display_name := buff.display_name
+	if next_level > 1:
+		display_name = "%s (Lv %d)" % [buff.display_name, next_level]
+
 	return {
 		"type": &"buff",
 		"id": buff.id,
-		"display_name": buff.display_name,
+		"display_name": display_name,
 		"description": buff.description,
 		"resource": buff,
+		"next_level": next_level,
 	}
 
 
@@ -392,9 +434,14 @@ func _apply_spell_reward(spell: SpellData) -> void:
 	if spell.id not in _chosen_spells:
 		_chosen_spells.append(spell.id)
 
-	player.grant_run_spell(spell)
+	if player.has_method("get_run_spell_level") and player.get_run_spell_level(spell.id) > 0:
+		player.upgrade_run_spell(spell)
+		print("[RunManager] Upgraded spell '%s'" % spell.display_name)
+	else:
+		player.grant_run_spell(spell)
+		print("[RunManager] Chose spell '%s'" % spell.display_name)
+
 	run_powers_changed.emit()
-	print("[RunManager] Chose spell '%s'" % spell.display_name)
 
 
 func _apply_buff_reward(buff: BuffData) -> void:
@@ -410,7 +457,11 @@ func _apply_buff_reward(buff: BuffData) -> void:
 
 	player.apply_buff(buff)
 	run_powers_changed.emit()
-	print("[RunManager] Chose buff '%s'" % buff.display_name)
+
+	if player.has_method("get_buff_stack_count") and player.get_buff_stack_count(buff.id) > 1:
+		print("[RunManager] Stacked buff '%s' to level %d" % [buff.display_name, player.get_buff_stack_count(buff.id)])
+	else:
+		print("[RunManager] Chose buff '%s'" % buff.display_name)
 
 
 func _clear_player_run_powers() -> void:
@@ -459,6 +510,7 @@ func _reset_run_stats() -> void:
 	_elapsed_seconds = 0.0
 	_kill_count = 0
 	_total_damage_done = 0.0
+	_spell_damage.clear()
 	_damage_taken = 0.0
 	_xp_collected = 0
 	_current_xp = 0
@@ -481,4 +533,86 @@ func _build_summary(reason: StringName) -> RunSummary:
 	summary.damage_taken = _damage_taken
 	summary.xp_collected = _xp_collected
 	summary.final_level = _run_level
+	summary.spell_powers = _snapshot_spell_powers()
+	summary.buff_powers = _snapshot_buff_powers()
 	return summary
+
+
+func _snapshot_spell_powers() -> Array:
+	var entries: Array = []
+	var player := _find_player()
+	var display_names: Dictionary = {}
+
+	if player and player.has_method("get_active_run_spells"):
+		for spell in player.get_active_run_spells():
+			if spell:
+				display_names[spell.id] = spell.display_name
+
+	var seen: Dictionary = {}
+
+	if player and player.get("basic_spell"):
+		var basic_spell: SpellData = player.basic_spell
+		if basic_spell:
+			seen[basic_spell.id] = true
+			entries.append({
+				"spell_id": basic_spell.id,
+				"display_name": basic_spell.display_name,
+				"level": 1,
+				"damage": float(_spell_damage.get(basic_spell.id, 0.0)),
+			})
+
+	for spell_id in _chosen_spells:
+		if seen.has(spell_id):
+			continue
+
+		seen[spell_id] = true
+		var level := 1
+		if player and player.has_method("get_run_spell_level"):
+			level = maxi(player.get_run_spell_level(spell_id), 1)
+
+		entries.append({
+			"spell_id": spell_id,
+			"display_name": display_names.get(spell_id, String(spell_id)),
+			"level": level,
+			"damage": float(_spell_damage.get(spell_id, 0.0)),
+		})
+
+	for spell_id in _spell_damage.keys():
+		if seen.has(spell_id):
+			continue
+
+		entries.append({
+			"spell_id": spell_id,
+			"display_name": display_names.get(spell_id, String(spell_id)),
+			"level": 1,
+			"damage": float(_spell_damage[spell_id]),
+		})
+
+	entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return float(a.get("damage", 0.0)) > float(b.get("damage", 0.0))
+	)
+	return entries
+
+
+func _snapshot_buff_powers() -> Array:
+	var entries: Array = []
+	var player := _find_player()
+	var display_names: Dictionary = {}
+
+	if player and player.has_method("get_active_run_buffs"):
+		for buff in player.get_active_run_buffs():
+			if buff:
+				display_names[buff.id] = buff.display_name
+
+	for buff_id in _chosen_buffs:
+		var stacks := 1
+		if player and player.has_method("get_buff_stack_count"):
+			stacks = maxi(player.get_buff_stack_count(buff_id), 1)
+
+		entries.append({
+			"buff_id": buff_id,
+			"display_name": display_names.get(buff_id, String(buff_id)),
+			"stacks": stacks,
+		})
+
+	return entries

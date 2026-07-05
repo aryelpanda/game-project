@@ -21,7 +21,7 @@ Own playable Maps / arenas used by Runs. A Map defines its arena scene, selectio
 
 - [x] Map scene template (Arena reused for `test_arena`)
 - [x] `MapData` Resource
-- [ ] Map gameplay design from `docs/content/map_design_template.md` (minimal index entry only for M3)
+- [x] Map gameplay design for `five_minute_gauntlet` ([../content/maps.md](../content/maps.md))
 - [ ] Map Selection metadata exposed to UI (M6)
 - [x] Spawner integration (`HordeSpawner` reads MapData)
 - [x] Spawn curve integration (`SpawnCurveData` + `SpawnCurvePhase`)
@@ -71,7 +71,7 @@ These fields should be derived from the map gameplay template:
 - `preview_description`
 - `unlock_requirement`
 - `enemy_pool`
-- `spawn_curve`
+- `spawn_curve` (`SpawnCurveData.spawn_rate_growth_per_minute` + `spawn_rate_growth_interval_seconds` compound spawn pressure)
 - `spawn_min_distance` / `spawn_max_distance` (extra margin beyond visible viewport edge for off-screen horde spawns)
 - `play_area_rect` (world-space bounds; player collision hull must stay inside)
 - `reward_pool`

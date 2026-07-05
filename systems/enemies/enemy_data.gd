@@ -7,6 +7,8 @@ extends Resource
 @export var stats: StatsData
 @export var skills: Array[SpellData] = []
 @export var xp_reward: int = 0
+@export var spawn_weight: float = 1.0
+@export var tint_color: Color = Color(0.9, 0.2, 0.2, 1.0)
 
 
 func validate() -> bool:

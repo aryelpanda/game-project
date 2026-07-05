@@ -3,6 +3,8 @@ class_name SpawnCurveData
 extends Resource
 
 @export var phases: Array[SpawnCurvePhase] = []
+@export var spawn_rate_growth_per_minute: float = 0.0 ## Compounding spawn rate boost each interval (1.0 = double).
+@export var spawn_rate_growth_interval_seconds: float = 60.0 ## How often spawn rate compounds (e.g. 30 = every 30s).
 
 
 func get_phase_at(elapsed_seconds: float) -> SpawnCurvePhase:

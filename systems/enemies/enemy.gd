@@ -44,6 +44,7 @@ func initialize(enemy_data: EnemyData, spawn_position: Vector2) -> void:
 	motion_mode = MOTION_MODE_FLOATING
 	collision_layer = EntityCollision.LAYER_ENEMY
 	collision_mask = EntityCollision.MASK_ENEMY_BLOCKS_PLAYER
+	_apply_visuals()
 	show()
 	_update_health_bar()
 
@@ -195,3 +196,15 @@ func _find_player() -> Node2D:
 func _update_health_bar() -> void:
 	if _health_bar and _health_bar.has_method("update_values"):
 		_health_bar.update_values(_current_health, _max_health)
+
+
+func _apply_visuals() -> void:
+	if not data:
+		return
+
+	var sprite := get_node_or_null("Sprite2D") as Sprite2D
+	if sprite:
+		sprite.modulate = data.tint_color
+
+	if _health_bar:
+		_health_bar.fill_color = data.tint_color

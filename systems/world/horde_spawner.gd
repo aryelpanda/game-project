@@ -38,7 +38,8 @@ func _process(delta: float) -> void:
 		return
 
 	_spawn_timer += delta
-	if _spawn_timer < phase.spawn_interval_seconds:
+	var spawn_interval := _get_effective_spawn_interval(phase, elapsed)
+	if _spawn_timer < spawn_interval:
 		return
 
 	_spawn_timer = 0.0
@@ -60,7 +61,37 @@ func _pick_enemy_data() -> EnemyData:
 	var pool := map_data.enemy_pool
 	if pool.is_empty():
 		return null
-	return pool[randi() % pool.size()]
+
+	var total_weight := 0.0
+	for enemy_data in pool:
+		if enemy_data:
+			total_weight += maxf(enemy_data.spawn_weight, 0.0)
+
+	if total_weight <= 0.0:
+		return pool[0]
+
+	var roll := randf() * total_weight
+	var accumulated := 0.0
+	for enemy_data in pool:
+		if not enemy_data:
+			continue
+		accumulated += maxf(enemy_data.spawn_weight, 0.0)
+		if roll <= accumulated:
+			return enemy_data
+
+	return pool[pool.size() - 1]
+
+
+func _get_effective_spawn_interval(phase: SpawnCurvePhase, elapsed: float) -> float:
+	var interval := phase.spawn_interval_seconds
+	var curve := map_data.spawn_curve
+	if not curve or curve.spawn_rate_growth_per_minute <= 0.0:
+		return interval
+
+	var interval_seconds := maxf(curve.spawn_rate_growth_interval_seconds, 0.001)
+	var periods := int(floor(elapsed / interval_seconds))
+	var multiplier := pow(1.0 + curve.spawn_rate_growth_per_minute, float(periods))
+	return interval / multiplier
 
 
 func _pick_spawn_position() -> Vector2:

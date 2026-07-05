@@ -91,11 +91,9 @@ Goal: killing enemies gives XP, levels the player, and offers 3 random temporary
 
 ---
 
-## M5 — Data-Driven Content  `Status: Design Approved — Not Started`
+## M5 — Data-Driven Content  `Status: Done`
 
 Goal: gameplay values move from code to Resources. First intentional map: **Five Minute Gauntlet** (see [content/maps.md](content/maps.md)).
-
-> **Planning only.** M5 design is approved below. Do **not** start the `m5-data-driven-content` branch or write implementation code until explicitly requested.
 
 ### Already done (M2–M4 baseline)
 
@@ -106,18 +104,18 @@ Goal: gameplay values move from code to Resources. First intentional map: **Five
 - [x] `RewardPoolData` + `m4_test_rewards` pool
 - [x] `StatsData` used by Player and Enemy
 
-### M5 implementation (when build starts)
+### M5 implementation
 
 - [x] First map gameplay design documented (Five Minute Gauntlet)
-- [x] First map listed in [content/maps.md](content/maps.md) as **Designed**
-- [ ] Implement `five_minute_gauntlet` map, spawn curve, and content `.tres` files
-- [ ] Run duration limit (`time_up` victory at 5:00)
-- [ ] Compounding spawn pressure (+35% spawn rate per minute)
-- [ ] Weighted enemy spawn (tank_grunt at 30% weight vs test_grunt)
-- [ ] New enemy: `tank_grunt` — blue square, 2× HP (80), melee skill
-- [ ] Spell/buff **leveling** on repeat level-up picks (stack buffs, upgrade spells)
-- [ ] Big Fireball: +1 projectile per level; Orbiting Star: +1 star per level
-- [ ] No hardcoded damage / health / cooldowns remain in code (audit pass)
+- [x] First map listed in [content/maps.md](content/maps.md) as **Implemented**
+- [x] Implement `five_minute_gauntlet` map, spawn curve, and content `.tres` files
+- [x] Run duration limit (`time_up` victory at 5:00)
+- [x] Compounding spawn pressure (+35% spawn rate per minute)
+- [x] Weighted enemy spawn (tank_grunt at 30% weight vs test_grunt)
+- [x] New enemy: `tank_grunt` — blue square, 2× HP (80), melee skill
+- [x] Spell/buff **leveling** on repeat level-up picks (stack buffs, upgrade spells)
+- [x] Big Fireball: +1 projectile per level; Orbiting Star: +1 star per level
+- [x] No hardcoded damage / health / cooldowns remain in code (audit pass)
 
 ---
 
@@ -133,7 +131,7 @@ Goal: player can understand the run state and make level-up choices.
 - [ ] Non-blocking autosave indicator.
 - [ ] HUD: health, mana, XP bar, run level, timer, kills.
 - [ ] Level-up choice screen with 3 random Spell / Buff cards.
-- [ ] Run summary screen (time survived, enemies killed, rewards earned).
+- [x] Run summary screen (time survived, enemies killed, spells/buffs, per-spell damage).
 - [ ] Run History screen showing latest completed / forfeited runs.
 - [ ] Run History details screen showing map, time, character, kills, damage, chosen Spells/Buffs, and per-Spell stats.
 - [ ] Character Stats screen from the hub shows base stats, permanent bonuses, final values, and passive Buff sources.
@@ -285,6 +283,7 @@ Goal: 1.0 release.
 
 ## Changelog
 
+- v0.14 - M5 Data-Driven Content completed: Five Minute Gauntlet map, timed victory, compounding spawn, weighted enemies, spell/buff leveling.
 - v0.13 - M5 design approved: Five Minute Gauntlet first map spec, spell/buff leveling, tank enemy. Implementation not started.
 - v0.12 - added milestone branching rules (branch per M#, tag on merge for rollback).
 - v0.11 - M4 XP & Level-Up Choices completed: RunProgressionData, reward pools, BuffData, level-up UI, RunPowersPanel, three test rewards.

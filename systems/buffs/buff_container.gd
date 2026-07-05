@@ -7,6 +7,7 @@ signal buff_removed(buff_id: StringName)
 
 var _stats: StatsBlock
 var _active: Dictionary = {}
+var _buff_stacks: Dictionary = {}
 
 
 func setup(stats: StatsBlock) -> void:
@@ -17,30 +18,38 @@ func apply(data: BuffData) -> void:
 	if not data or not _stats:
 		return
 
-	if _active.has(data.id):
-		remove(data.id)
-
+	var stack_index := int(_buff_stacks.get(data.id, 0))
+	_buff_stacks[data.id] = stack_index + 1
 	_active[data.id] = data
+
 	for mod in data.modifiers:
 		if mod:
-			_stats.add_modifier(data.id, mod)
+			_stats.add_modifier(_stack_source_key(data.id, stack_index), mod)
 
 	buff_applied.emit(data.id, data)
-	print("[BuffContainer] Applied buff '%s'" % data.display_name)
+	print("[BuffContainer] Applied buff '%s' (stack %d)" % [data.display_name, _buff_stacks[data.id]])
 
 
 func remove(buff_id: StringName) -> void:
 	if not _stats or not _active.has(buff_id):
 		return
 
-	_stats.remove_modifiers_from(buff_id)
+	var stack_count := get_buff_stack_count(buff_id)
+	for i in range(stack_count):
+		_stats.remove_modifiers_from(_stack_source_key(buff_id, i))
+
 	_active.erase(buff_id)
+	_buff_stacks.erase(buff_id)
 	buff_removed.emit(buff_id)
 	print("[BuffContainer] Removed buff '%s'" % buff_id)
 
 
 func has(buff_id: StringName) -> bool:
 	return _active.has(buff_id)
+
+
+func get_buff_stack_count(buff_id: StringName) -> int:
+	return int(_buff_stacks.get(buff_id, 0))
 
 
 func get_active_buffs() -> Array[BuffData]:
@@ -65,3 +74,7 @@ func clear_all() -> void:
 	var ids := _active.keys()
 	for buff_id in ids:
 		remove(buff_id)
+
+
+func _stack_source_key(buff_id: StringName, index: int) -> StringName:
+	return StringName("%s#%d" % [buff_id, index])

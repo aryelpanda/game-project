@@ -4,10 +4,12 @@ extends Control
 @onready var _title_label: Label = $Panel/VBox/TitleLabel
 @onready var _list_container: VBoxContainer = $Panel/VBox/ListContainer
 @onready var _grant_all_button: Button = $Panel/VBox/GrantAllButton
+@onready var _end_game_button: Button = $Panel/VBox/EndGameButton
 
 
 func _ready() -> void:
 	_grant_all_button.pressed.connect(_on_grant_all_pressed)
+	_end_game_button.pressed.connect(_on_end_game_pressed)
 	RunManager.run_started.connect(_on_run_started)
 	RunManager.run_ended.connect(_on_run_ended)
 	RunManager.run_powers_changed.connect(_refresh)
@@ -32,6 +34,10 @@ func _on_grant_all_pressed() -> void:
 	_refresh()
 
 
+func _on_end_game_pressed() -> void:
+	RunManager.end_run_for_testing()
+
+
 func _refresh() -> void:
 	_clear_list()
 
@@ -43,11 +49,17 @@ func _refresh() -> void:
 	var has_any := false
 	for spell in player.get_active_run_spells():
 		has_any = true
-		_add_row("[Spell] %s" % spell.display_name, String(spell.id))
+		var level := 1
+		if player.has_method("get_run_spell_level"):
+			level = maxi(player.get_run_spell_level(spell.id), 1)
+		_add_row("[Spell] %s x%d" % [spell.display_name, level], String(spell.id))
 
 	for buff in player.get_active_run_buffs():
 		has_any = true
-		_add_row("[Buff] %s" % buff.display_name, String(buff.id))
+		var stacks := 1
+		if player.has_method("get_buff_stack_count"):
+			stacks = maxi(player.get_buff_stack_count(buff.id), 1)
+		_add_row("[Buff] %s x%d" % [buff.display_name, stacks], String(buff.id))
 
 	if not has_any:
 		_add_row("(none yet)", "Kill enemies or use Grant All")

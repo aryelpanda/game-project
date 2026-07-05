@@ -37,8 +37,8 @@ Display save-slot selection, the profile main screen, survivor run state, and ou
 - [ ] Autosave indicator
 - [x] HUD scaffold (M3 timer/kills; M4 XP bar + level)
 - [x] Level-up choice screen (M4 minimal overlay)
-- [x] Run powers panel (M4 right-side active spell/buff list + debug grant-all)
-- [ ] Run summary screen
+- [x] Run powers panel (M4 right-side active spell/buff list + test grant-all / end-run buttons)
+- [x] Run summary screen (time, kills, spells/buffs with levels, per-spell damage)
 - [ ] Run History screen
 - [ ] Run History details screen
 - [ ] Talent tree screen
@@ -70,7 +70,7 @@ Display save-slot selection, the profile main screen, survivor run state, and ou
 - Delete slot and overwrite slot actions require confirmation dialogs.
 - Autosave indicator is small and non-blocking; it must not interrupt gameplay.
 - The level-up screen displays exactly 3 reward choices for MVP.
-- Run summary displays time survived, enemies killed, run level reached, and post-run reward.
+- Run summary displays time survived, enemies killed, run level reached, chosen spells/buffs with levels, per-spell damage, and post-run reward.
 - Run History is read-only player-facing data.
 - MVP Run History can be a simple latest-runs list with a details screen.
 - Later sorting/filtering is allowed but not required for MVP.

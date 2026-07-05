@@ -7,9 +7,11 @@ signal spell_removed(spell_id: StringName)
 signal powers_changed()
 
 const ORBIT_AURA_SCENE := preload("res://systems/skills/OrbitAura.tscn")
+const AUTO_PROJECTILE_SPREAD := 0.26
 
 var _player: Node2D
 var _active_spells: Dictionary = {}
+var _spell_levels: Dictionary = {}
 var _cooldowns: Dictionary = {}
 var _orbit_nodes: Dictionary = {}
 
@@ -23,9 +25,11 @@ func grant_spell(spell: SpellData) -> void:
 		return
 
 	if _active_spells.has(spell.id):
+		upgrade_spell(spell)
 		return
 
 	_active_spells[spell.id] = spell
+	_spell_levels[spell.id] = 1
 	_cooldowns[spell.id] = 0.0
 
 	if spell.spell_type == SpellData.TYPE_ORBIT_AURA:
@@ -34,6 +38,26 @@ func grant_spell(spell: SpellData) -> void:
 	spell_granted.emit(spell)
 	powers_changed.emit()
 	print("[RunSpellController] Granted spell '%s'" % spell.display_name)
+
+
+func upgrade_spell(spell: SpellData) -> void:
+	if not spell or not _player:
+		return
+
+	if not _active_spells.has(spell.id):
+		grant_spell(spell)
+		return
+
+	_spell_levels[spell.id] = get_spell_level(spell.id) + 1
+
+	if spell.spell_type == SpellData.TYPE_ORBIT_AURA:
+		_spawn_orbit_aura(spell)
+
+	powers_changed.emit()
+	print(
+		"[RunSpellController] Upgraded spell '%s' to level %d"
+		% [spell.display_name, get_spell_level(spell.id)]
+	)
 
 
 func remove_spell(spell_id: StringName) -> void:
@@ -45,6 +69,7 @@ func remove_spell(spell_id: StringName) -> void:
 		_clear_orbit_aura(spell_id)
 
 	_active_spells.erase(spell_id)
+	_spell_levels.erase(spell_id)
 	_cooldowns.erase(spell_id)
 	spell_removed.emit(spell_id)
 	powers_changed.emit()
@@ -68,6 +93,10 @@ func has_spell(spell_id: StringName) -> bool:
 	return _active_spells.has(spell_id)
 
 
+func get_spell_level(spell_id: StringName) -> int:
+	return int(_spell_levels.get(spell_id, 0))
+
+
 func _physics_process(delta: float) -> void:
 	if not _player or not RunManager.is_active():
 		return
@@ -87,27 +116,35 @@ func _physics_process(delta: float) -> void:
 
 
 func _fire_auto_projectile(spell: SpellData) -> void:
-	var direction := Vector2.from_angle(randf() * TAU)
-	var spawn_position := EntityCollision.compute_projectile_spawn_position(
-		_player as CharacterBody2D,
-		direction,
-		spell.projectile_data.radius
-	)
+	var level := maxi(get_spell_level(spell.id), 1)
+	var base_angle := randf() * TAU
 
-	var payload := DamageEvent.new()
-	payload.source = _player
-	payload.base_damage = spell.base_damage
-	payload.damage_type = spell.damage_type
-	payload.spell_id = spell.id
+	for i in range(level):
+		var angle_offset := 0.0
+		if level > 1:
+			angle_offset = lerpf(-AUTO_PROJECTILE_SPREAD, AUTO_PROJECTILE_SPREAD, float(i) / float(level - 1))
+		var direction := Vector2.from_angle(base_angle + angle_offset)
+		var spawn_position := EntityCollision.compute_projectile_spawn_position(
+			_player as CharacterBody2D,
+			direction,
+			spell.projectile_data.radius
+		)
 
-	ProjectileManager.spawn(spell.projectile_data, spawn_position, direction, payload)
+		var payload := DamageEvent.new()
+		payload.source = _player
+		payload.base_damage = spell.base_damage
+		payload.damage_type = spell.damage_type
+		payload.spell_id = spell.id
+
+		ProjectileManager.spawn(spell.projectile_data, spawn_position, direction, payload)
 
 
 func _spawn_orbit_aura(spell: SpellData) -> void:
 	_clear_orbit_aura(spell.id)
 
 	var nodes: Array[OrbitAura] = []
-	var count := maxi(spell.orbit_count, 1)
+	var level := maxi(get_spell_level(spell.id), 1)
+	var count := spell.orbit_count + (level - 1)
 	for i in range(count):
 		var aura: OrbitAura = ORBIT_AURA_SCENE.instantiate()
 		var start_angle := (TAU / float(count)) * float(i)

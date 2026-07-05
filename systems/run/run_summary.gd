@@ -11,3 +11,7 @@ extends Resource
 @export var damage_taken: float = 0.0
 @export var xp_collected: int = 0
 @export var final_level: int = 1
+## Each entry: { spell_id, display_name, level, damage }
+@export var spell_powers: Array = []
+## Each entry: { buff_id, display_name, stacks }
+@export var buff_powers: Array = []

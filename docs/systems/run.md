@@ -36,17 +36,18 @@ Own the lifecycle of a single survival session: start the run, track time and ki
 - [x] Run summary data (`RunSummary` Resource)
 - [ ] Run history entry data
 - [x] Basic damage tracking (total dealt / taken)
-- [ ] Per-Spell damage / kill tracking
-- [x] Chosen Spell / Buff tracking (IDs in RunManager)
+- [x] Per-spell damage tracking (summary snapshot)
+- [x] Timed run victory (`time_up` when `MapData.run_duration_seconds` elapsed)
+- [x] Repeat level-up reward upgrades (spell levels, buff stacks)
 
 ## Design Rules
 
 - Run owns session state. Player owns movement/health/mana; Enemies own behavior; UI displays run state.
-- A new run starts only after Profile Main Screen -> Start Run -> Map Selection (full UI in M6). **M3 exception:** auto-start via `RunManager.start_run(&"test_arena", &"default")` from Main for testing.
+- A new run starts only after Profile Main Screen -> Start Run -> Map Selection (full UI in M6). **M5 boot:** auto-start via `RunManager.start_run(&"five_minute_gauntlet", &"default")` from Main.
 - Run receives the selected `map_id` and `character_id`.
 - Temporary Spells and Buffs gained from level-ups are cleared when the run ends.
 - The Run system asks Skills/Buffs to apply rewards; it does not implement spell or buff behavior.
-- Level-up rewards come from `RewardPoolData` Resources, not hardcoded arrays.
+- Level-up rewards can be picked again to upgrade spells or stack buffs (M5).
 - Run end rewards are permanent only after the Run system hands them to Save / meta-progression.
 - Exact post-run reward formula is TBD and must remain easy to replace.
 - Run must expose checkpoint data for SaveManager.
@@ -80,6 +81,8 @@ func end_run(reason: StringName) -> RunSummary
 func register_enemy_kill(enemy_data: EnemyData) -> void
 func register_spell_damage(spell_id: StringName, amount: float) -> void
 func register_spell_kill(spell_id: StringName, enemy_data: EnemyData) -> void
+func grant_all_test_rewards() -> void
+func end_run_for_testing() -> void
 func add_experience(amount: int) -> void
 func choose_level_up_reward(reward_id: StringName) -> void
 func current_run_level() -> int
@@ -88,6 +91,17 @@ func to_checkpoint_dict() -> Dictionary
 func from_checkpoint_dict(data: Dictionary) -> void
 func build_history_entry(summary: RunSummary) -> RunHistoryEntry
 ```
+
+## RunSummary Data
+
+`RunSummary` is emitted on `run_ended` and captures the final run snapshot.
+
+Fields:
+
+- `map_id`, `character_id`, `end_reason`, `duration_seconds`
+- `total_kills`, `total_damage_done`, `damage_taken`, `xp_collected`, `final_level`
+- `spell_powers` — Array of `{ spell_id, display_name, level, damage }` (includes basic attack and chosen run spells, sorted by damage)
+- `buff_powers` — Array of `{ buff_id, display_name, stacks }` for chosen run buffs
 
 ## Run History Data
 

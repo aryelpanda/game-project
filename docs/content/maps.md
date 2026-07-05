@@ -17,7 +17,7 @@ Version: 0.3
 | Map ID | Display Name | Tier | Status | Resource | Notes |
 | ------ | ------------ | ---- | ------ | -------- | ----- |
 | test_arena | Test Arena | tutorial | Implemented | `content/maps/test_arena.tres` | Single `test_grunt` horde, ramping spawn curve, death ends run. M3 dev map. |
-| five_minute_gauntlet | Five Minute Gauntlet | tutorial | Designed | _(not created yet)_ | M5 first intentional map. 5-min timed victory, compounding spawn, tank enemy. |
+| five_minute_gauntlet | Five Minute Gauntlet | tutorial | Implemented | `content/maps/five_minute_gauntlet.tres` | M5 first map. 5-min timed victory, compounding spawn, tank enemy, reward leveling. |
 
 ## Map Status Legend
 
@@ -34,7 +34,7 @@ Version: 0.3
 
 ## Five Minute Gauntlet — Gameplay Design (M5)
 
-Approved design. **Not implemented yet.** See [ROADMAP.md](../ROADMAP.md) M5.
+Approved design. **Implemented in M5.** See [ROADMAP.md](../ROADMAP.md) M5.
 
 ### 1. Map Identity
 
@@ -53,7 +53,7 @@ Survive a fixed 5-minute gauntlet while horde pressure ramps every minute. Level
 ### 3. Primary Gameplay Twist
 
 - **Timed victory:** run ends automatically at 5:00 with a success summary (`time_up`).
-- **Compounding spawn pressure:** +35% spawn rate each minute (minute N multiplier = 1.35^N on base interval).
+- **Compounding spawn pressure:** spawn rate doubles every 30 seconds (`spawn_rate_growth_per_minute = 1.0`, `spawn_rate_growth_interval_seconds = 30`).
 - **Reward leveling:** re-picking a spell or buff from the level-up pool increases its power.
 
 ### 4. Win / Lose Conditions
@@ -65,9 +65,9 @@ Survive a fixed 5-minute gauntlet while horde pressure ramps every minute. Level
 
 ### 5. Spawn Pressure
 
-- Base spawn interval: ~4.0s at minute 0 (tunable in spawn curve).
-- **+35% spawn rate per minute** (compounding): `effective_interval = base / pow(1.35, floor(elapsed / 60))`
-- Phases at 0 / 60 / 120 / 180 / 240s also raise `max_concurrent` (e.g. 5 → 8 → 12 → 16 → 20).
+- Base spawn interval: ~1.33s at minute 0 (3× faster than original 4.0s tuning).
+- **Spawn rate doubles every 30 seconds** (compounding): `effective_interval = base / pow(2.0, floor(elapsed / 30))`
+- Phases at 0 / 60 / 120 / 180 / 240s also raise `max_concurrent` (e.g. 15 → 24 → 36 → 48 → 60; 3× original caps).
 
 ### 6. Enemy Roster
 
@@ -112,6 +112,6 @@ When M5 build starts on branch `m5-data-driven-content`:
 
 ## Changelog
 
-- v0.3 - added `five_minute_gauntlet` M5 design (planned, not implemented).
+- v0.4 - `five_minute_gauntlet` implemented (M5).
 - v0.2 - added `test_arena` M3 dev map entry.
 - v0.1 - initial map gameplay index

@@ -21,7 +21,7 @@ Track modifiers on an entity. Buffs can be temporary run rewards, timed status e
 - [x] Buff container per Actor (`BuffContainer` on Player)
 - [x] Lifetime type support (`run_only` for level-up rewards)
 - [ ] Duration timers
-- [ ] Stacking policies
+- [x] Stacking for run-only level-up buffs (`get_buff_stack_count`)
 - [ ] Tick pipeline
 - [x] Stats integration (modifier source via `StatModifier`)
 - [x] Permanent talent passive design documented

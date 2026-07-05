@@ -29,7 +29,8 @@ Spawn, run, and dispose of hostile horde entities. Enemies rush the player, atta
 - [x] Enemy skill(s) wired from `EnemyData.skills`
 - [x] Death flow
 - [x] XP award hook to Run (`EnemyManager.enemy_killed` → `RunManager.register_enemy_kill`)
-- [ ] Optional drop hook to Loot
+- [x] Weighted enemy spawn (`EnemyData.spawn_weight`)
+- [x] Data-driven enemy tint (`EnemyData.tint_color`)
 
 ## Design Rules
 
@@ -81,6 +82,8 @@ extends Resource
 @export var stats: StatsData              # base stat block (shared shape with player)
 @export var skills: Array[SpellData]      # must contain at least 1 entry
 @export var xp_reward: int
+@export var spawn_weight: float = 1.0
+@export var tint_color: Color
 ```
 
 ```gdscript

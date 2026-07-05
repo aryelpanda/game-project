@@ -10,3 +10,4 @@ extends Resource
 @export var spawn_min_distance: float = 32.0 ## Min extra distance beyond the visible viewport edge.
 @export var spawn_max_distance: float = 96.0 ## Max extra distance beyond the visible viewport edge.
 @export var play_area_rect: Rect2 = Rect2(-1000.0, -1000.0, 2000.0, 2000.0) ## World-space bounds; player hull must stay inside.
+@export var run_duration_seconds: float = 0.0 ## Run ends with time_up when elapsed >= this. 0 = no time limit.

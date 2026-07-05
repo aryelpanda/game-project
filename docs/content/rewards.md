@@ -55,7 +55,7 @@ When the same reward is picked again from the level-up pool:
 | `big_fireball` | +1 fireball per cooldown volley |
 | `orbiting_star` | +1 orbiting star |
 
-Implementation deferred until M5 build starts. See [maps.md](maps.md) and [ROADMAP.md](../ROADMAP.md) M5.
+Implementation deferred until M5 build starts. **Implemented in M5** — repeat picks stack/upgrade. See [maps.md](maps.md) and [ROADMAP.md](../ROADMAP.md) M5.
 
 ## Changelog
 

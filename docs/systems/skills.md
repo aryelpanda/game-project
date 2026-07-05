@@ -24,7 +24,7 @@ Own Spells and Talent Trees. This system separates temporary in-run powers from 
 - [x] Runtime temporary spell registry (`RunSpellController` on Player)
 - [x] Temporary run reward application (via RunManager → Player)
 - [ ] Talent unlock / upgrade API
-- [x] Active Spell cast pipeline (M2 manual basic_fireball; M4 auto/orbit run spells)
+- [x] Spell leveling on repeat level-up picks (`upgrade_spell`, `get_spell_level`)
 - [ ] Passive Talent -> Buff registration
 - [x] First-pass Talent Tree design documented for testing
 

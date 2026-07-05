@@ -119,7 +119,7 @@ func _try_cast_basic_spell() -> void:
 func _compute_manual_attack_damage() -> float:
 	var attack_power := stats.get_stat(&"attack_power")
 	if attack_power <= 0.0:
-		attack_power = 100.0
+		return 0.0
 	return basic_spell.base_damage * (attack_power / 100.0)
 
 
@@ -131,6 +131,23 @@ func apply_buff(data: BuffData) -> void:
 func grant_run_spell(spell: SpellData) -> void:
 	if run_spells:
 		run_spells.grant_spell(spell)
+
+
+func upgrade_run_spell(spell: SpellData) -> void:
+	if run_spells:
+		run_spells.upgrade_spell(spell)
+
+
+func get_run_spell_level(spell_id: StringName) -> int:
+	if run_spells:
+		return run_spells.get_spell_level(spell_id)
+	return 0
+
+
+func get_buff_stack_count(buff_id: StringName) -> int:
+	if buff_container:
+		return buff_container.get_buff_stack_count(buff_id)
+	return 0
 
 
 func clear_run_powers() -> void:

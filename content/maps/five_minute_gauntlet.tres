@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="MapData" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://systems/world/map_data.gd" id="1_map"]
+[ext_resource type="PackedScene" path="res://scenes/arena/Arena.tscn" id="2_scene"]
+[ext_resource type="Resource" path="res://content/enemies/test_grunt.tres" id="3_grunt"]
+[ext_resource type="Resource" path="res://content/enemies/tank_grunt.tres" id="4_tank"]
+[ext_resource type="Resource" path="res://content/spawn_curves/five_minute_gauntlet_curve.tres" id="5_curve"]
+
+[resource]
+script = ExtResource("1_map")
+id = &"five_minute_gauntlet"
+display_name = "Five Minute Gauntlet"
+scene = ExtResource("2_scene")
+enemy_pool = [ExtResource("3_grunt"), ExtResource("4_tank")]
+spawn_curve = ExtResource("5_curve")
+spawn_min_distance = 32.0
+spawn_max_distance = 96.0
+play_area_rect = Rect2(-1000, -1000, 2000, 2000)
+run_duration_seconds = 300.0
