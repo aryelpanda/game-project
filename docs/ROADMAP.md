@@ -10,6 +10,9 @@ Rules for using this file:
 - Check items off as they are completed.
 - Do not invent new milestones without approval.
 - When a milestone is fully checked, mark it Done and start the next.
+- Each M0–M8 milestone is developed on branch `m{N}-{slug}` (e.g. `m5-data-driven-content`).
+- Merge to `main` only when the milestone checklist is fully checked.
+- Tag `main` as `m{N}-complete` after merge for roadmap rollback (see [TECH_STACK.md](TECH_STACK.md)).
 
 Legend: `[ ]` = not done, `[x]` = done, `[~]` = in progress.
 
@@ -268,6 +271,7 @@ Goal: 1.0 release.
 
 ## Changelog
 
+- v0.12 - added milestone branching rules (branch per M#, tag on merge for rollback).
 - v0.11 - M4 XP & Level-Up Choices completed: RunProgressionData, reward pools, BuffData, level-up UI, RunPowersPanel, three test rewards.
 - v0.10 - M3 Horde & Run Loop completed: RunManager, World/MapData, HordeSpawner, run HUD/summary, checkpoint export stub. Map Selection UI deferred to M6.
 - v0.8 - restructured M9 into four parallel iterative workstreams (M9.A Content, M9.B Story & Lore, M9.C Feel & Polish, M9.D Balance). M9 explicitly exempt from "one milestone In Progress at a time" rule. Checklists are directional, not exhaustive. M11 unchanged.

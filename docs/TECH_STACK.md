@@ -76,11 +76,20 @@ Real Aseprite art work begins in M9.A (content buildout) and M9.C (feel & polish
 
 ### Workflow
 
-1. **Commit** — each commit is a restorable snapshot with a message describing the change.
-2. **Push** — uploads commits to GitHub; nothing is lost from history unless force-pushed.
-3. **Revert** — use `git revert <hash>` to undo a commit safely, or `git checkout <hash> -- <file>` to restore a single file.
+1. **Branch** — each M0–M8 milestone is developed on `m{N}-{slug}` (e.g. `m5-data-driven-content`). Create the branch only when explicitly starting that milestone.
+2. **Commit** — each commit is a restorable snapshot with a message describing the change. Commits go on the milestone branch, not `main`.
+3. **Merge** — when the ROADMAP checklist is complete, merge the branch into `main`.
+4. **Tag** — after merge, tag `main` as `m{N}-complete` (e.g. `m5-complete`) for roadmap rollback.
+5. **Push** — upload commits and tags to GitHub.
 
-One logical change per commit when possible. Tag milestones (e.g. `v0.3-m3-horde`) for important versions. See `.cursor/rules/90-git-commits.mdc` for AI commit/push policy.
+| Item | Pattern | Example |
+| ---- | ------- | ------- |
+| Branch | `m{N}-{slug}` | `m5-data-driven-content` |
+| Tag after merge | `m{N}-complete` | `m5-complete` |
+
+**Rollback:** `git log --oneline --decorate` to see tags; `git checkout m4-complete` to inspect; `git revert <hash>` to undo safely on `main`.
+
+M9 uses parallel sub-branches (`m9a-content`, `m9b-story`, etc.) per [ROADMAP.md](ROADMAP.md). See `.cursor/rules/90-git-commits.mdc` for AI commit/push policy.
 
 ## Steam Stack
 
@@ -124,6 +133,7 @@ That is enough to build the full game. Add tools only when the project has a cle
 
 ## Changelog
 
+- v0.4 - added milestone branching workflow: branch per M#, tag `m{N}-complete` on merge for rollback.
 - v0.3 - added Placeholder & Art Timing Policy: Godot built-in placeholders only through M8; real art starts in M9.A / M9.C.
 - v0.2 - pinned engine to Godot 4.7 stable after M0 skeleton verified booting.
 - v0.1 - initial stack recommendation.
