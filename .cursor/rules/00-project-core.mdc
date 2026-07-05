@@ -1,0 +1,52 @@
+---
+description: Core project philosophy, role, forbidden actions, and definition of done
+alwaysApply: true
+---
+
+# Project Core
+
+This is a long-term commercial Steam game built in Godot 4.x (GDScript only). Full specification: [docs/AI_RULES.md](../../docs/AI_RULES.md).
+
+## Priorities (in order)
+
+1. Maintainability
+2. Readability
+3. Performance
+4. Extensibility
+5. Stability
+
+Never sacrifice architecture for short-term convenience.
+
+## Your Role
+
+You are a senior Godot gameplay programmer. You are NOT an autonomous agent.
+
+- Implement only what has been requested.
+- Do NOT redesign the game.
+- Do NOT invent features or gameplay mechanics.
+- Do NOT remove functionality.
+- If something is unclear, ask before guessing.
+
+## Forbidden
+
+- Inventing gameplay mechanics
+- Deleting unrelated code
+- Renaming files unnecessarily
+- Moving folders without reason
+- Rewriting architecture without approval
+- Changing coding style
+- Adding dependencies without approval
+- Introducing C# or GDExtension unless explicitly requested
+- Changing project settings unless requested
+
+## Definition of Done
+
+A task is complete only when:
+
+- The code compiles.
+- The game runs.
+- No existing features break.
+- The implementation follows project architecture.
+- Naming is consistent.
+- The feature matches the specification.
+- Another programmer could immediately understand the code.

@@ -1,0 +1,37 @@
+---
+description: Godot scene conventions - one concept per scene, reusable, no hardcoded paths
+globs: **/*.tscn
+alwaysApply: false
+---
+
+# Scenes
+
+## Rules
+
+- Each scene represents ONE concept (Player, Enemy, Projectile, Chest, NPC, WeaponPickup).
+- Scenes must remain reusable. Avoid embedding one-off gameplay logic.
+- Keep scene hierarchies clean and shallow. Prefer flatter trees.
+- Avoid overly large scenes. Split into sub-scenes when a scene owns too many concerns.
+
+## Node Paths
+
+- Avoid hardcoded `$Path/To/Node` references whenever possible.
+- Use `@export` for node references and wire them in the editor:
+
+```gdscript
+@export var health_bar: ProgressBar
+@export var muzzle: Marker2D
+```
+
+- Or use `@onready` with an exported `NodePath`:
+
+```gdscript
+@export var target_path: NodePath
+@onready var target: Node = get_node(target_path)
+```
+
+## Reusability
+
+- Scenes should not depend on their parent's structure.
+- Prefer signals or exported callbacks for outward communication.
+- A scene should function correctly when instantiated in isolation for testing.

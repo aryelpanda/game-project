@@ -1,0 +1,35 @@
+---
+description: Before modifying any system, read its docs/systems/<name>.md contract
+globs: systems/**/*.gd,systems/**/*.tscn,systems/**/*.tres
+alwaysApply: false
+---
+
+# System Work Contract
+
+Every folder under `systems/` has a matching design doc at `docs/systems/<name>.md`. That doc is the contract.
+
+## Required Steps
+
+1. **Before editing** any file under `systems/<name>/`, read `docs/systems/<name>.md`.
+2. Verify the change fits the doc's:
+   - Goal
+   - Components
+   - Design Rules
+   - Public API
+   - Dependencies
+3. If the change **deviates** from the doc:
+   - STOP.
+   - Explain the deviation.
+   - Propose either updating the doc first, or reshaping the change.
+   - Wait for approval.
+
+## When Adding a New System
+
+1. Add its entry to [docs/SYSTEM_MAP.md](../../docs/SYSTEM_MAP.md).
+2. Create `docs/systems/<name>.md` from the standard template.
+3. Add it to [docs/ARCHITECTURE.md](../../docs/ARCHITECTURE.md) if it is a major system.
+4. Only then create the `systems/<name>/` code folder.
+
+## Cross-System Changes
+
+Touching two or more systems in one change is a signal to review [docs/ARCHITECTURE.md](../../docs/ARCHITECTURE.md). Coupling may be creeping in. Recommend a mediating manager or event before implementing.

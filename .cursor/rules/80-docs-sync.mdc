@@ -1,0 +1,39 @@
+---
+description: Keep docs in sync after every feature - PROGRESS, system docs, SYSTEM_MAP
+alwaysApply: true
+---
+
+# Docs Sync
+
+Docs are the source of truth. After any implementation change, update them in the same task.
+
+## After Implementing a Feature
+
+Update the following in the same change:
+
+1. **`docs/systems/<name>.md`** for each system you touched:
+   - Update "Current Status" (checkbox flip).
+   - Update "Public API" if the API changed.
+   - Update "Dependencies" if you added or removed one.
+   - Add to "Open Questions" if something needs future decisions.
+
+2. **[docs/PROGRESS.md](../../docs/PROGRESS.md)**:
+   - Move the system's status if it advanced (e.g. `Not Started` -> `In Progress`, `In Progress` -> `MVP`).
+   - Update "Last Touched" date.
+
+3. **[docs/SYSTEM_MAP.md](../../docs/SYSTEM_MAP.md)**:
+   - Only if you added, renamed, or removed a system.
+
+4. **[docs/ROADMAP.md](../../docs/ROADMAP.md)**:
+   - Check off completed milestone items.
+   - Do NOT invent new milestones without approval.
+
+## Forbidden
+
+- Merging code changes without corresponding doc updates.
+- Silently changing a public API without updating `docs/systems/<name>.md`.
+- Adding a new system without adding it to `SYSTEM_MAP.md` and creating its system doc first (see `60-systems.mdc`).
+
+## Rule of Thumb
+
+If a future developer (or AI session) reads only the docs, they should have an accurate picture of what exists and what works.

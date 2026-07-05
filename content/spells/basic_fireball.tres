@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="SpellData" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://systems/skills/spell_data.gd" id="1_spell"]
+[ext_resource type="Script" path="res://systems/projectiles/projectile_data.gd" id="2_projectile"]
+
+[sub_resource type="Resource" id="ProjectileData_basic_fireball"]
+script = ExtResource("2_projectile")
+speed = 520.0
+lifetime = 2.5
+pierce_count = 0
+collision_mask = 2
+radius = 8.0
+
+[resource]
+script = ExtResource("1_spell")
+id = &"basic_fireball"
+display_name = "Basic Fireball"
+description = "Manual left-click fireball aimed at the cursor."
+spell_type = &"manual"
+cooldown = 0.292
+mana_cost = 0.0
+is_talent_granted = false
+base_damage = 15.0
+damage_type = &"fire"
+projectile_data = SubResource("ProjectileData_basic_fireball")

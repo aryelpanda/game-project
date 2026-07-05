@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="StatsData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://systems/stats/stats_data.gd" id="1_stats"]
+
+[resource]
+script = ExtResource("1_stats")
+id = &"player_default"
+values = {
+&"attack_power": 100.0,
+&"max_health": 100.0,
+&"max_mana": 50.0,
+&"move_speed": 300.0,
+&"spell_power": 10.0
+}

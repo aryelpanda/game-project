@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://cenemy1"]
+
+[ext_resource type="Script" path="res://systems/enemies/enemy.gd" id="1_enemy"]
+[ext_resource type="PackedScene" path="res://ui/HealthBar.tscn" id="2_health_bar"]
+
+[sub_resource type="PlaceholderTexture2D" id="tex_enemy"]
+size = Vector2(32, 32)
+
+[sub_resource type="RectangleShape2D" id="shape_enemy"]
+size = Vector2(32, 32)
+
+[node name="Enemy" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 1
+motion_mode = 1
+script = ExtResource("1_enemy")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0.9, 0.2, 0.2, 1)
+texture = SubResource("tex_enemy")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("shape_enemy")
+
+[node name="HealthBar" parent="." instance=ExtResource("2_health_bar")]
+fill_color = Color(0.9, 0.2, 0.2, 1)

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="RunProgressionData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://systems/run/run_progression_data.gd" id="1_prog"]
+[ext_resource type="Resource" path="res://content/reward_pools/m4_test_rewards.tres" id="2_pool"]
+
+[resource]
+script = ExtResource("1_prog")
+id = &"m4_default"
+base_xp_to_level = 20
+xp_per_level_increment = 10
+reward_pool = ExtResource("2_pool")

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="RewardPoolData" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://systems/run/reward_pool_data.gd" id="1_pool"]
+[ext_resource type="Resource" path="res://content/spells/orbiting_star.tres" id="2_orbit"]
+[ext_resource type="Resource" path="res://content/spells/big_fireball.tres" id="3_big"]
+[ext_resource type="Resource" path="res://content/buffs/attack_power_boost.tres" id="4_buff"]
+
+[resource]
+script = ExtResource("1_pool")
+id = &"m4_test_rewards"
+display_name = "M4 Test Rewards"
+spells = [ExtResource("2_orbit"), ExtResource("3_big")]
+buffs = [ExtResource("4_buff")]

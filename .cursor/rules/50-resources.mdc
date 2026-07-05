@@ -1,0 +1,59 @@
+---
+description: Prefer Godot Resources for all configurable gameplay data
+globs: **/*.tres,**/*.gd
+alwaysApply: false
+---
+
+# Resources & Data-Driven Design
+
+Full strategy: [docs/CONTENT.md](../../docs/CONTENT.md).
+
+## Rule
+
+Gameplay values live in Resources (`.tres`), not code.
+
+Use Resources for:
+
+- Weapons
+- Enemies
+- Items
+- Abilities / Skills
+- Stats
+- Buffs
+- Loot tables
+- Projectiles
+
+## Pattern
+
+Define a typed Resource:
+
+```gdscript
+class_name WeaponData
+extends Resource
+
+@export var display_name: String
+@export var damage: float
+@export var cooldown: float
+@export var projectile_scene: PackedScene
+```
+
+Consume it in gameplay code:
+
+```gdscript
+@export var weapon_data: WeaponData
+
+func attack() -> void:
+    if not weapon_data:
+        push_warning("Weapon has no data")
+        return
+    _spawn_projectile(weapon_data.projectile_scene, weapon_data.damage)
+```
+
+## Forbidden
+
+- Hardcoded gameplay values in scripts (e.g. `damage = 25` inline).
+- Large content collections stored in Markdown. Use `.tres` or JSON per [docs/CONTENT.md](../../docs/CONTENT.md).
+
+## Save-Ability
+
+Resource data used at runtime must be saveable if it changes. Static definitions (base weapon stats) are not saved; instance state (current durability, upgrades) is.

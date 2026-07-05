@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="SpellData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://systems/skills/spell_data.gd" id="1_spell"]
+
+[resource]
+script = ExtResource("1_spell")
+id = &"orbiting_star"
+display_name = "Orbiting Star"
+description = "A star orbits the player and damages enemies on contact."
+spell_type = &"orbit_aura"
+cooldown = 0.0
+mana_cost = 0.0
+is_talent_granted = false
+base_damage = 15.0
+damage_type = &"physical"
+orbit_radius = 72.0
+orbit_speed = 2.5
+orbit_count = 1
+orbit_hit_cooldown = 0.5

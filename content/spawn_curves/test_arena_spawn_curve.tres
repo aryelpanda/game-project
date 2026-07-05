@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="SpawnCurveData" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://systems/world/spawn_curve_data.gd" id="1_curve"]
+[ext_resource type="Script" path="res://systems/world/spawn_curve_phase.gd" id="2_phase"]
+
+[sub_resource type="Resource" id="Phase_opening"]
+script = ExtResource("2_phase")
+start_seconds = 0.0
+spawn_interval_seconds = 4.0
+max_concurrent = 5
+
+[sub_resource type="Resource" id="Phase_ramp"]
+script = ExtResource("2_phase")
+start_seconds = 60.0
+spawn_interval_seconds = 3.0
+max_concurrent = 10
+
+[sub_resource type="Resource" id="Phase_spike"]
+script = ExtResource("2_phase")
+start_seconds = 180.0
+spawn_interval_seconds = 2.0
+max_concurrent = 15
+
+[sub_resource type="Resource" id="Phase_end"]
+script = ExtResource("2_phase")
+start_seconds = 300.0
+spawn_interval_seconds = 1.5
+max_concurrent = 20
+
+[resource]
+script = ExtResource("1_curve")
+phases = [SubResource("Phase_opening"), SubResource("Phase_ramp"), SubResource("Phase_spike"), SubResource("Phase_end")]

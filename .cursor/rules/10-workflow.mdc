@@ -1,0 +1,42 @@
+---
+description: Preferred workflow for every task - read docs first, implement one feature, verify, stop
+alwaysApply: true
+---
+
+# Workflow
+
+Follow this order for every task.
+
+## Before Coding
+
+1. Read [docs/SYSTEM_MAP.md](../../docs/SYSTEM_MAP.md) to locate the relevant system.
+2. Read the matching `docs/systems/<name>.md` for design rules and public API.
+3. Read [docs/ARCHITECTURE.md](../../docs/ARCHITECTURE.md) if crossing system boundaries.
+4. Identify affected systems. Minimize side effects.
+5. State any assumptions you had to make.
+
+## While Coding
+
+- Implement ONE feature at a time.
+- Keep changes focused - do not "improve" unrelated code.
+- Prefer extending existing architecture over rewriting it.
+- Never guess. If unclear, stop and ask.
+
+## After Coding
+
+- Check for regressions in adjacent systems.
+- Keep naming consistent with [docs/AI_RULES.md](../../docs/AI_RULES.md) conventions.
+- Do not break existing public APIs.
+- Update [docs/PROGRESS.md](../../docs/PROGRESS.md) and the relevant `docs/systems/<name>.md` (see `80-docs-sync.mdc`).
+
+## When Unsure
+
+- Never guess.
+- Ask questions.
+- State assumptions explicitly.
+- Offer alternatives with trade-offs.
+
+## When Refactoring Is Recommended
+
+- Never rewrite working systems unless explicitly requested.
+- If refactoring is needed: explain why, describe risks, wait for approval.

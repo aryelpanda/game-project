@@ -1,0 +1,29 @@
+---
+description: Git commit policy — never commit without explicit user permission
+alwaysApply: true
+---
+
+# Git Commits
+
+Remote: `https://github.com/aryelpanda/game-project.git`
+
+## Required Behavior
+
+- **NEVER commit without explicit user permission.**
+- After completing any code or doc change, **ask the user** whether they want a commit.
+- Do not stage or commit proactively, even if changes look ready.
+- Only commit when the user says yes (e.g. "commit", "yes, commit", "go ahead and commit").
+
+## When the User Approves a Commit
+
+1. Run `git status` and `git diff` to review changes.
+2. Stage only relevant files (never secrets or debug artifacts).
+3. Write a concise commit message focused on **why**, not just what.
+4. Commit, then run `git status` to verify success.
+5. Do **not** push unless the user explicitly asks.
+
+## Forbidden
+
+- Committing without permission.
+- Pushing without permission.
+- Amending or force-pushing without explicit request.

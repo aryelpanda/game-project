@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="MapData" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://systems/world/map_data.gd" id="1_map"]
+[ext_resource type="PackedScene" path="res://scenes/arena/Arena.tscn" id="2_scene"]
+[ext_resource type="Resource" path="res://content/enemies/test_grunt.tres" id="3_enemy"]
+[ext_resource type="Resource" path="res://content/spawn_curves/test_arena_spawn_curve.tres" id="4_curve"]
+
+[resource]
+script = ExtResource("1_map")
+id = &"test_arena"
+display_name = "Test Arena"
+scene = ExtResource("2_scene")
+enemy_pool = [ExtResource("3_enemy")]
+spawn_curve = ExtResource("4_curve")
+spawn_min_distance = 32.0
+spawn_max_distance = 96.0
+play_area_rect = Rect2(-1000, -1000, 2000, 2000)

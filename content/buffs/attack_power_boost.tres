@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="BuffData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://systems/buffs/buff_data.gd" id="1_buff"]
+[ext_resource type="Script" path="res://systems/stats/stat_modifier.gd" id="2_mod_script"]
+
+[sub_resource type="Resource" id="Modifier_attack_power"]
+script = ExtResource("2_mod_script")
+stat = &"attack_power"
+type = &"percent_add"
+value = 0.25
+lifetime = &"run_only"
+display_name = "+25% Attack Power"
+
+[resource]
+script = ExtResource("1_buff")
+id = &"attack_power_boost"
+display_name = "Attack Power Boost"
+description = "Increases left-click attack damage by 25%."
+lifetime = &"run_only"
+modifiers = [SubResource("Modifier_attack_power")]

@@ -1,0 +1,47 @@
+---
+description: GDScript naming, code style, and performance guardrails
+globs: **/*.gd
+alwaysApply: false
+---
+
+# GDScript Style
+
+Godot 4.x, GDScript only. No C#. No GDExtension unless explicitly requested.
+
+## Naming
+
+| Kind      | Convention  | Example              |
+| --------- | ----------- | -------------------- |
+| Classes   | PascalCase  | `EnemySpawner`       |
+| Variables | snake_case  | `current_health`     |
+| Functions | snake_case  | `apply_damage()`     |
+| Signals   | snake_case  | `enemy_died`         |
+| Constants | UPPER_CASE  | `MAX_HEALTH`         |
+| Scenes    | PascalCase  | `Player.tscn`        |
+| Folders   | snake_case  | `enemy_manager/`     |
+
+## Code Style
+
+- Write clean, explicit code. Avoid clever solutions.
+- Keep functions short. Keep files organized.
+- Avoid deeply nested code and duplicated logic.
+- Prefer explicit code over hidden magic.
+- Every public class begins with a short description comment.
+- Comments explain WHY, not WHAT. Avoid narrating obvious code.
+
+## Performance Guardrails
+
+Assume the game may have thousands of enemies, thousands of projectiles, and hundreds of pickups.
+
+- Do not allocate objects every frame.
+- Avoid unnecessary work in `_process()` and `_physics_process()`.
+- Prefer event-driven code (signals, callbacks) over polling.
+- Pool projectiles, enemies, and other frequently spawned nodes.
+- Optimize only when necessary, but avoid obviously inefficient code.
+
+## Error Handling
+
+- Never silently ignore errors.
+- Print meaningful warnings via `push_warning()` / `push_error()`.
+- Validate inputs on public functions.
+- Avoid crashes.

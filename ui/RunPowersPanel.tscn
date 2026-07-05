@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://n8o6naob66mm"]
+
+[ext_resource type="Script" path="res://ui/run_powers_panel.gd" id="1_panel"]
+
+[node name="RunPowersPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -240.0
+grow_horizontal = 0
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_panel")
+
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 16.0
+offset_right = -8.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TitleLabel" type="Label" parent="Panel/VBox"]
+layout_mode = 2
+text = "Run Powers"
+horizontal_alignment = 1
+
+[node name="ListContainer" type="VBoxContainer" parent="Panel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="GrantAllButton" type="Button" parent="Panel/VBox"]
+layout_mode = 2
+mouse_filter = 0
+text = "Grant All Test Rewards"

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="SpellData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://systems/skills/spell_data.gd" id="1_spell"]
+
+[resource]
+script = ExtResource("1_spell")
+id = &"melee_touch"
+display_name = "Melee Touch"
+cooldown = 1.0
+mana_cost = 0.0
+is_talent_granted = false
+base_damage = 8.0
+damage_type = &"physical"

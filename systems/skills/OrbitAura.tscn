@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://corbitaura1"]
+
+[ext_resource type="Script" path="res://systems/skills/orbit_aura.gd" id="1_orbit"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_orbit"]
+radius = 12.0
+
+[node name="OrbitAura" type="Area2D"]
+collision_layer = 0
+collision_mask = 2
+monitoring = false
+script = ExtResource("1_orbit")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_orbit")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(1, 0.9, 0.2, 1)
+scale = Vector2(0.75, 0.75)
+
+[node name="Placeholder" type="Polygon2D" parent="Sprite2D"]
+color = Color(1, 0.9, 0.2, 1)
+polygon = PackedVector2Array(-10, 0, 0, -14, 10, 0, 0, 14)
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]

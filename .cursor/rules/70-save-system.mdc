@@ -1,0 +1,47 @@
+---
+description: Everything important must be saveable - design with persistence in mind
+globs: **/*.gd
+alwaysApply: false
+---
+
+# Persistence
+
+Full save system design: `docs/systems/save.md`.
+
+## Rule
+
+Every gameplay system must expose saveable data. Never assume state is temporary.
+
+## Checklist for Any New Gameplay Feature
+
+Before merging, confirm:
+
+- [ ] Runtime state can be serialized to a plain dictionary or Resource.
+- [ ] State can be restored from that serialization without side effects.
+- [ ] Version-safe: adding a new field does not break old saves.
+- [ ] No dependency on scene tree paths for identity (use stable IDs).
+
+## Pattern
+
+Systems expose `to_save_dict()` and `from_save_dict()`:
+
+```gdscript
+func to_save_dict() -> Dictionary:
+    return {
+        "version": 1,
+        "health": current_health,
+        "position": [global_position.x, global_position.y],
+    }
+
+func from_save_dict(data: Dictionary) -> void:
+    var version: int = data.get("version", 1)
+    current_health = data.get("health", max_health)
+    var pos: Array = data.get("position", [0, 0])
+    global_position = Vector2(pos[0], pos[1])
+```
+
+## Forbidden
+
+- Storing player-visible progress in variables that are never serialized.
+- Using node paths, instance IDs, or object references as save keys.
+- Silent breakage when loading an older save version - handle missing fields explicitly.

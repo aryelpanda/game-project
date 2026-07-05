@@ -1,0 +1,40 @@
+---
+description: Architectural principles - modular systems, composition, single responsibility
+alwaysApply: true
+---
+
+# Architecture
+
+Full architecture spec: [docs/ARCHITECTURE.md](../../docs/ARCHITECTURE.md). Read it before crossing system boundaries.
+
+## Principles
+
+- Modular systems, low coupling, high cohesion.
+- Data-driven design - values live in Resources, not code.
+- Composition over inheritance. Inheritance only for true "is-a" relationships.
+- Single Responsibility Principle for every class and system.
+- Clean separation between gameplay, UI, and data.
+
+## System Boundaries
+
+- Every major feature (Combat, Inventory, Equipment, Skills, Stats, Crafting, Saving, NPCs, Quests, UI, Audio) is isolated.
+- Each system exposes a clean, documented API.
+- No system directly manipulates another system's internal data.
+- No circular dependencies. If two systems become tightly coupled, recommend a better architecture before implementing.
+
+## Managers
+
+Managers coordinate systems. They do NOT contain gameplay logic. Each manager has one responsibility.
+
+- Good: `EnemyManager`, `ProjectileManager`, `SaveManager`, `AudioManager`, `UIManager`.
+- Bad: `GameManager` that owns everything.
+
+## Communication
+
+- Prefer direct calls when ownership is obvious.
+- Use signals only when they improve decoupling. Do not replace every function call with a signal.
+- UI displays game state; UI does not own game state.
+
+## Before Implementing
+
+Always consult [docs/ARCHITECTURE.md](../../docs/ARCHITECTURE.md) and the matching `docs/systems/<name>.md`. If the change does not fit the existing architecture, stop and ask.

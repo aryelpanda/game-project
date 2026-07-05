@@ -1,0 +1,35 @@
+[gd_scene load_steps=7 format=3 uid="uid://bplayerm1"]
+
+[ext_resource type="Script" path="res://systems/player/player.gd" id="1_player"]
+[ext_resource type="Resource" path="res://content/stats/player_default.tres" id="2_stats"]
+[ext_resource type="Resource" path="res://content/spells/basic_fireball.tres" id="3_spell"]
+[ext_resource type="PackedScene" path="res://ui/HealthBar.tscn" id="4_health_bar"]
+[ext_resource type="Script" path="res://systems/skills/run_spell_controller.gd" id="5_run_spells"]
+
+[sub_resource type="PlaceholderTexture2D" id="tex_player"]
+size = Vector2(32, 32)
+
+[sub_resource type="RectangleShape2D" id="shape_player"]
+size = Vector2(32, 32)
+
+[node name="Player" type="CharacterBody2D"]
+collision_layer = 1
+collision_mask = 2
+motion_mode = 1
+process_physics_priority = 1
+script = ExtResource("1_player")
+stats_data = ExtResource("2_stats")
+basic_spell = ExtResource("3_spell")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("tex_player")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("shape_player")
+
+[node name="HealthBar" parent="." instance=ExtResource("4_health_bar")]
+
+[node name="RunSpellController" type="Node2D" parent="."]
+script = ExtResource("5_run_spells")
+
+[node name="Camera2D" type="Camera2D" parent="."]
