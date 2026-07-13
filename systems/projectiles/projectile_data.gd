@@ -15,3 +15,7 @@ const DEFAULT_SPRITE_CONTENT_SIZE := 520.0
 ## How large the sprite appears relative to hitbox diameter (1.0 = sprite diameter matches 2*radius).
 @export var visual_size_multiplier: float = 2.0
 @export var sprite_content_size: float = DEFAULT_SPRITE_CONTENT_SIZE
+## When true, rotates the sprite so travel aligns with art facing (plus rotation_offset_radians).
+@export var rotate_to_direction: bool = false
+## Added to direction.angle() when rotating (PI if art tip faces -X / left).
+@export var rotation_offset_radians: float = 0.0

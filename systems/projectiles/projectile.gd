@@ -88,6 +88,10 @@ func _apply_visual(data: ProjectileData) -> void:
 		var target_diameter := _visual_radius * 2.0 * maxf(data.visual_size_multiplier, 0.1)
 		var scale_factor := target_diameter / content_size
 		animated_sprite.scale = Vector2(scale_factor, scale_factor)
+		if data.rotate_to_direction:
+			animated_sprite.rotation = _direction.angle() + data.rotation_offset_radians
+		else:
+			animated_sprite.rotation = 0.0
 		animated_sprite.show()
 		animated_sprite.play()
 	else:
@@ -101,6 +105,8 @@ func _stop_sprite_animation() -> void:
 		animated_sprite.stop()
 		animated_sprite.hide()
 		animated_sprite.sprite_frames = null
+		animated_sprite.rotation = 0.0
+		animated_sprite.scale = Vector2.ONE
 	_use_sprite_animation = false
 
 

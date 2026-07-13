@@ -1,0 +1,5 @@
+https://craftpix.net/file-licenses/
+
+Source: Craftpix free water and fire magic sprite vector pack - Water Arrow frames only.
+Used as a one-time M5 visual test exception (see docs/TECH_STACK.md).
+Location: assets/spells/water_arrow/

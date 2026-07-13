@@ -29,6 +29,7 @@ Generic projectile motion, collision, lifetime, and pooling. Projectiles are agn
 - Projectiles remain generic. Damage and effects come from the DamageEvent they carry, not from projectile subclasses.
 - Optional `sprite_frames` on `ProjectileData` drive an `AnimatedSprite2D`. When unset, a circular placeholder is drawn.
 - Sprite scale is derived from `radius`, `visual_size_multiplier`, and `sprite_content_size`.
+- `rotate_to_direction` aims directional art (e.g. water arrow facing +X) along travel.
 - Always pool projectiles. Never instantiate in hot loops.
 - Projectiles do not know about specific weapons — they are configured with a payload at spawn time.
 - Collision layers are set from ProjectileData, not hardcoded per scene.
@@ -51,6 +52,8 @@ extends Resource
 @export var animation_name: StringName = &"spin"
 @export var visual_size_multiplier: float = 2.0
 @export var sprite_content_size: float = 520.0
+@export var rotate_to_direction: bool = false
+@export var rotation_offset_radians: float = 0.0  # PI when art tip faces -X
 ```
 
 ```gdscript

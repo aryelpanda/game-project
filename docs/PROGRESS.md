@@ -26,7 +26,7 @@ Version: 0.16
 | 4  | Enemies      | [systems/enemies.md](systems/enemies.md)     | `systems/enemies/`      | MVP          | 2026-07-05   | M5: spawn_weight, tint_color, tank_grunt enemy. |
 | 5  | Combat       | [systems/combat.md](systems/combat.md)       | `systems/combat/`       | MVP          | 2026-07-04   | M2: DamageEvent + DamageManager autoload; armor stub; crit/dodge stubbed. |
 | 6  | Weapons      | [systems/weapons.md](systems/weapons.md)     | `systems/weapons/`      | Not Started  | —            | De-prioritized for early survivor MVP unless needed. |
-| 7  | Projectiles  | [systems/projectiles.md](systems/projectiles.md) | `systems/projectiles/` | MVP          | 2026-07-13   | Fireball art under assets/spells/fireball/; SpriteFrames optional. |
+| 7  | Projectiles  | [systems/projectiles.md](systems/projectiles.md) | `systems/projectiles/` | MVP          | 2026-07-13   | Left-click uses water_arrow art; fireball kept for Big Fireball. |
 | 8  | Items        | [systems/items.md](systems/items.md)         | `systems/items/`        | Not Started  | —            | De-prioritized for early survivor MVP. |
 | 9  | Inventory    | [systems/inventory.md](systems/inventory.md) | `systems/inventory/`    | Not Started  | —            | Not part of early core loop unless later approved. |
 | 10 | Equipment    | [systems/equipment.md](systems/equipment.md) | `systems/equipment/`    | Not Started  | —            | Not part of early core loop unless later approved. |

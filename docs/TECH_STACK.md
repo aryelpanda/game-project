@@ -56,7 +56,7 @@ Not allowed before M9:
 - AI-generated sprites.
 - Custom Aseprite art.
 
-**Approved one-time exception (M5 test only):** Craftpix Fire Ball frames under `assets/spells/fireball/` for projectile animation wiring. Do not expand third-party art beyond this without a new explicit approval.
+**Approved one-time exception (M5 test only):** Craftpix Fire Ball frames under `assets/spells/fireball/` and Water Arrow frames under `assets/spells/water_arrow/` (same free pack) for projectile animation wiring. Do not expand third-party art beyond this without a new explicit approval.
 
 Real Aseprite art work begins in M9.A (content buildout) and M9.C (feel & polish), as defined in [ROADMAP.md](ROADMAP.md).
 
