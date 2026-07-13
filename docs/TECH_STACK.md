@@ -34,8 +34,10 @@ Every character, enemy, spell, buff, talent, skill, and map can have associated 
 | Export format | PNG / PNG sprite sheets | Imported by Godot. |
 | Animation | Godot `AnimatedSprite2D` / `SpriteFrames` | Use sprite sheets or frame sequences based on asset size. |
 | Tiles / maps | Godot `TileMapLayer` + Godot tilesets | Avoid external map tools unless Godot becomes limiting. |
-| Source art folder | `art_source/` | Store `.aseprite` and other editable source files. |
-| Runtime art folder | `assets/` and/or `content/` | Store exported PNGs used by Godot. |
+| Source art folder | `art_source/` | Editable sources (`.aseprite`, AI, PSD). Layout mirrors `assets/`. |
+| Runtime art folder | `assets/` | Godot-ready PNGs, `SpriteFrames`, fonts, audio. See [`assets/README.md`](../assets/README.md). |
+
+`content/` holds gameplay Resources (`.tres`). Those Resources **reference** files under `assets/`; they do not store pixel data.
 
 ## Placeholder & Art Timing Policy
 
@@ -53,6 +55,8 @@ Not allowed before M9:
 - Downloaded third-party art packs (Kenney, itch.io, OpenGameArt, etc.), even CC0.
 - AI-generated sprites.
 - Custom Aseprite art.
+
+**Approved one-time exception (M5 test only):** Craftpix Fire Ball frames under `assets/spells/fireball/` for projectile animation wiring. Do not expand third-party art beyond this without a new explicit approval.
 
 Real Aseprite art work begins in M9.A (content buildout) and M9.C (feel & polish), as defined in [ROADMAP.md](ROADMAP.md).
 

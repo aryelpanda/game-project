@@ -7,6 +7,7 @@ script = ExtResource("1_spell")
 id = &"orbiting_star"
 display_name = "Orbiting Star"
 description = "A star orbits the player and damages enemies on contact."
+level_up_effect_text = "+1 star"
 spell_type = &"orbit_aura"
 cooldown = 0.0
 mana_cost = 0.0

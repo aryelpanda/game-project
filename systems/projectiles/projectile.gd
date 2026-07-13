@@ -2,6 +2,9 @@
 class_name Projectile
 extends Area2D
 
+const DEFAULT_COLOR := Color(1.0, 0.45, 0.1, 1.0)
+const HIGHLIGHT_COLOR := Color(1.0, 0.88, 0.55, 0.75)
+
 var _data: ProjectileData
 var _direction: Vector2 = Vector2.RIGHT
 var _payload: DamageEvent
@@ -10,6 +13,13 @@ var _time_alive: float = 0.0
 var _hits_remaining: int = 0
 var _pending_despawn: bool = false
 var _hit_instance_ids: Array[int] = []
+var _visual_radius: float = 8.0
+var _visual_color: Color = DEFAULT_COLOR
+var _use_sprite_animation: bool = false
+
+
+func _get_animated_sprite() -> AnimatedSprite2D:
+	return get_node_or_null("AnimatedSprite2D") as AnimatedSprite2D
 
 
 func is_active() -> bool:
@@ -39,9 +49,59 @@ func configure(
 	_pending_despawn = false
 	_hit_instance_ids.clear()
 	collision_mask = data.collision_mask
+	_apply_visual(data)
 	monitoring = false
 	call_deferred("_finish_spawn_setup")
 	show()
+	queue_redraw()
+
+
+func _draw() -> void:
+	if not _data or _use_sprite_animation:
+		return
+
+	# Placeholder circle when no sprite frames are configured.
+	draw_circle(Vector2.ZERO, _visual_radius, _visual_color)
+	draw_circle(
+		Vector2(-_visual_radius * 0.28, -_visual_radius * 0.28),
+		_visual_radius * 0.38,
+		HIGHLIGHT_COLOR
+	)
+
+
+func _apply_visual(data: ProjectileData) -> void:
+	_visual_radius = maxf(data.radius, 1.0)
+	_visual_color = DEFAULT_COLOR
+
+	var collision_shape := get_node_or_null("CollisionShape2D") as CollisionShape2D
+	if collision_shape:
+		var circle := CircleShape2D.new()
+		circle.radius = _visual_radius
+		collision_shape.shape = circle
+
+	_use_sprite_animation = data.sprite_frames != null and data.sprite_frames.has_animation(data.animation_name)
+	var animated_sprite := _get_animated_sprite()
+	if _use_sprite_animation and animated_sprite:
+		animated_sprite.sprite_frames = data.sprite_frames
+		animated_sprite.animation = data.animation_name
+		var content_size := maxf(data.sprite_content_size, 1.0)
+		var target_diameter := _visual_radius * 2.0 * maxf(data.visual_size_multiplier, 0.1)
+		var scale_factor := target_diameter / content_size
+		animated_sprite.scale = Vector2(scale_factor, scale_factor)
+		animated_sprite.show()
+		animated_sprite.play()
+	else:
+		_use_sprite_animation = false
+		_stop_sprite_animation()
+
+
+func _stop_sprite_animation() -> void:
+	var animated_sprite := _get_animated_sprite()
+	if animated_sprite:
+		animated_sprite.stop()
+		animated_sprite.hide()
+		animated_sprite.sprite_frames = null
+	_use_sprite_animation = false
 
 
 func _finish_spawn_setup() -> void:
@@ -153,5 +213,8 @@ func reset_for_pool() -> void:
 	_hits_remaining = 0
 	_pending_despawn = false
 	_hit_instance_ids.clear()
+	_visual_radius = 8.0
+	_stop_sprite_animation()
 	set_deferred("monitoring", false)
 	hide()
+	queue_redraw()

@@ -1,6 +1,6 @@
 # CONTENT.md
 
-Version: 0.5
+Version: 0.6
 
 > How gameplay content is stored, where it lives, and when to use each format. Enforcement rule: [.cursor/rules/50-resources.mdc](../.cursor/rules/50-resources.mdc).
 
@@ -46,6 +46,14 @@ content/
 ```
 
 Gameplay design notes live under `docs/content/`.
+
+## Art vs Content
+
+- **`content/`** — gameplay Resources (damage, cooldowns, spawn curves, ids). Typed `.tres` data.
+- **`assets/`** — runtime art/audio Godot loads (PNG frames, `SpriteFrames`, fonts, music). See [`assets/README.md`](../assets/README.md).
+- **`art_source/`** — editable source files only; never referenced by game code.
+
+A spell `.tres` in `content/spells/` may point at `res://assets/spells/<family>/…` for visuals. Do not put PNGs inside `content/`.
 
 ```text
 docs/content/
@@ -171,6 +179,7 @@ If a category grows past ~100 entries and editor authoring becomes painful, migr
 
 ## Changelog
 
+- v0.6 - clarified `content/` vs `assets/` vs `art_source/`; art layout documented in `assets/README.md`.
 - v0.5 - added `content/run/` folder, level-up reward workflow, and link to `docs/content/rewards.md`.
 - v0.4 - added enemy_skills content folder and table row for enemy-only SpellData pool.
 - v0.3 - added map gameplay design workflow and docs/content map template references.

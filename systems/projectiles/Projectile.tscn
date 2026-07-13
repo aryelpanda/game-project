@@ -1,12 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://cprojectile1"]
+[gd_scene load_steps=3 format=3 uid="uid://cprojectile1"]
 
 [ext_resource type="Script" path="res://systems/projectiles/projectile.gd" id="1_projectile"]
 
 [sub_resource type="CircleShape2D" id="shape_projectile"]
 radius = 8.0
-
-[sub_resource type="PlaceholderTexture2D" id="tex_projectile"]
-size = Vector2(16, 16)
 
 [node name="Projectile" type="Area2D"]
 collision_layer = 4
@@ -14,9 +11,8 @@ collision_mask = 2
 monitoring = true
 script = ExtResource("1_projectile")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-modulate = Color(1, 0.45, 0.1, 1)
-texture = SubResource("tex_projectile")
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("shape_projectile")

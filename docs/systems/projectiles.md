@@ -21,10 +21,14 @@ Generic projectile motion, collision, lifetime, and pooling. Projectiles are agn
 - [x] ProjectileManager autoload with pooling
 - [x] Collision -> impact event
 - [x] Lifetime timeout
+- [x] Circular sphere-style visual sized from `ProjectileData.radius`
+- [x] Optional `SpriteFrames` animation on projectiles (Craftpix fireball test)
 
 ## Design Rules
 
 - Projectiles remain generic. Damage and effects come from the DamageEvent they carry, not from projectile subclasses.
+- Optional `sprite_frames` on `ProjectileData` drive an `AnimatedSprite2D`. When unset, a circular placeholder is drawn.
+- Sprite scale is derived from `radius`, `visual_size_multiplier`, and `sprite_content_size`.
 - Always pool projectiles. Never instantiate in hot loops.
 - Projectiles do not know about specific weapons — they are configured with a payload at spawn time.
 - Collision layers are set from ProjectileData, not hardcoded per scene.
@@ -40,9 +44,13 @@ extends Resource
 
 @export var speed: float
 @export var lifetime: float
-@export var visual: PackedScene
 @export var pierce_count: int = 0
 @export var collision_mask: int
+@export var radius: float  # collision hitbox radius
+@export var sprite_frames: SpriteFrames  # optional AnimatedSprite2D frames
+@export var animation_name: StringName = &"spin"
+@export var visual_size_multiplier: float = 2.0
+@export var sprite_content_size: float = 520.0
 ```
 
 ```gdscript

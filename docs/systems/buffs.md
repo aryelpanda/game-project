@@ -83,6 +83,7 @@ extends Resource
 @export var tick_damage: DamageEvent  # optional
 @export var icon: Texture2D
 @export var description: String
+@export var level_up_effect_text: String  # green effect line on level-up UI
 ```
 
 ```gdscript

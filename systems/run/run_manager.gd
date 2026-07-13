@@ -388,6 +388,7 @@ func _make_spell_option(spell: SpellData) -> Dictionary:
 		"id": spell.id,
 		"display_name": display_name,
 		"description": spell.description,
+		"effect_text": spell.level_up_effect_text,
 		"resource": spell,
 		"next_level": next_level,
 	}
@@ -410,6 +411,7 @@ func _make_buff_option(buff: BuffData) -> Dictionary:
 		"id": buff.id,
 		"display_name": display_name,
 		"description": buff.description,
+		"effect_text": buff.level_up_effect_text,
 		"resource": buff,
 		"next_level": next_level,
 	}

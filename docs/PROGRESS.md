@@ -26,7 +26,7 @@ Version: 0.16
 | 4  | Enemies      | [systems/enemies.md](systems/enemies.md)     | `systems/enemies/`      | MVP          | 2026-07-05   | M5: spawn_weight, tint_color, tank_grunt enemy. |
 | 5  | Combat       | [systems/combat.md](systems/combat.md)       | `systems/combat/`       | MVP          | 2026-07-04   | M2: DamageEvent + DamageManager autoload; armor stub; crit/dodge stubbed. |
 | 6  | Weapons      | [systems/weapons.md](systems/weapons.md)     | `systems/weapons/`      | Not Started  | —            | De-prioritized for early survivor MVP unless needed. |
-| 7  | Projectiles  | [systems/projectiles.md](systems/projectiles.md) | `systems/projectiles/` | MVP          | 2026-07-04   | M2: ProjectileData, pooled Projectile scene, ProjectileManager autoload. |
+| 7  | Projectiles  | [systems/projectiles.md](systems/projectiles.md) | `systems/projectiles/` | MVP          | 2026-07-13   | Fireball art under assets/spells/fireball/; SpriteFrames optional. |
 | 8  | Items        | [systems/items.md](systems/items.md)         | `systems/items/`        | Not Started  | —            | De-prioritized for early survivor MVP. |
 | 9  | Inventory    | [systems/inventory.md](systems/inventory.md) | `systems/inventory/`    | Not Started  | —            | Not part of early core loop unless later approved. |
 | 10 | Equipment    | [systems/equipment.md](systems/equipment.md) | `systems/equipment/`    | Not Started  | —            | Not part of early core loop unless later approved. |
@@ -36,7 +36,7 @@ Version: 0.16
 | 14 | Loot         | [systems/loot.md](systems/loot.md)           | `systems/loot/`         | Not Started  | —            | XP rewards may be separate from item loot. |
 | 15 | World        | [systems/world.md](systems/world.md)         | `systems/world/`        | MVP          | 2026-07-05   | M5: gauntlet spawn doubles every 30s via growth interval. |
 | 16 | Save         | [systems/save.md](systems/save.md)           | `systems/save/`         | In Progress  | 2026-07-03   | SaveManager autoload stub and talent progression save shape documented; save runtime not implemented. |
-| 17 | UI           | [systems/ui.md](systems/ui.md)               | `systems/ui/`           | In Progress  | 2026-07-05   | M5/M6: run summary shows kills, spell/buff breakdown, per-spell damage. |
+| 17 | UI           | [systems/ui.md](systems/ui.md)               | `systems/ui/`           | In Progress  | 2026-07-13   | Level-up cards show green `level_up_effect_text` per reward. |
 | 18 | Audio        | [systems/audio.md](systems/audio.md)         | `systems/audio/`        | In Progress  | 2026-07-03   | AudioManager autoload stub added; audio runtime not implemented. |
 | 19 | VFX          | [systems/vfx.md](systems/vfx.md)             | `systems/vfx/`          | Not Started  | —            |       |
 | 20 | Debug        | [systems/debug.md](systems/debug.md)         | `systems/debug/`        | Not Started  | —            |       |

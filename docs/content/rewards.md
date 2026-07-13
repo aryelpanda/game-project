@@ -21,17 +21,17 @@ Enemy skills live in `content/enemy_skills/` and must never be added to reward p
 
 1. Create one `.tres` file in `content/spells/` **or** `content/buffs/`.
 2. Set a unique stable `id: StringName` (e.g. `&"orbiting_star"`).
-3. Fill in display name, description, and gameplay values (damage, cooldown, modifiers).
+3. Fill in display name, description, **`level_up_effect_text`** (short green effect line on the level-up screen), and gameplay values (damage, cooldown, modifiers).
 4. Add a reference to the Resource in a `RewardPoolData` (e.g. [`content/reward_pools/m4_test_rewards.tres`](../../content/reward_pools/m4_test_rewards.tres)).
 5. No code change is required unless the reward needs a **new spell behavior type** (see [`docs/systems/skills.md`](../systems/skills.md)).
 
 ## M4 Test Rewards
 
-| ID | Type | File | Effect | Validation |
-| -- | ---- | ---- | ------ | ---------- |
-| `attack_power_boost` | Buff | [`content/buffs/attack_power_boost.tres`](../../content/buffs/attack_power_boost.tres) | +25% `attack_power` for left-click damage | Basic fireball damage 15 → ~18.75 |
-| `orbiting_star` | Spell | [`content/spells/orbiting_star.tres`](../../content/spells/orbiting_star.tres) | Orbit aura, 15 contact damage | Enemies touching the star take damage |
-| `big_fireball` | Spell | [`content/spells/big_fireball.tres`](../../content/spells/big_fireball.tres) | Auto projectile every 2s, random direction, 35 damage | Large fireballs spawn without player input |
+| ID | Type | File | Effect | `level_up_effect_text` | Validation |
+| -- | ---- | ---- | ------ | ---------------------- | ---------- |
+| `attack_power_boost` | Buff | [`content/buffs/attack_power_boost.tres`](../../content/buffs/attack_power_boost.tres) | +25% `attack_power` for left-click damage | `+25% attack` | Basic fireball damage 15 → ~18.75 |
+| `orbiting_star` | Spell | [`content/spells/orbiting_star.tres`](../../content/spells/orbiting_star.tres) | Orbit aura, 15 contact damage | `+1 star` | Enemies touching the star take damage |
+| `big_fireball` | Spell | [`content/spells/big_fireball.tres`](../../content/spells/big_fireball.tres) | Auto projectile every 2s, random direction, 35 damage; sphere visual at 1.5× basic attack radius (12 vs 8) | `+1 fireball` | Large fireballs spawn without player input |
 
 **Reward pool:** [`content/reward_pools/m4_test_rewards.tres`](../../content/reward_pools/m4_test_rewards.tres)
 

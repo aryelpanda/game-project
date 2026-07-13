@@ -128,6 +128,7 @@ const TYPE_ORBIT_AURA := &"orbit_aura"
 @export var id: StringName
 @export var display_name: String
 @export var description: String
+@export var level_up_effect_text: String  # green effect line on level-up UI
 @export var spell_type: StringName  # manual, auto_projectile, orbit_aura
 @export var cooldown: float
 @export var mana_cost: float

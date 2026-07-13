@@ -16,5 +16,6 @@ script = ExtResource("1_buff")
 id = &"attack_power_boost"
 display_name = "Attack Power Boost"
 description = "Increases left-click attack damage by 25%."
+level_up_effect_text = "+25% attack"
 lifetime = &"run_only"
 modifiers = [SubResource("Modifier_attack_power")]
