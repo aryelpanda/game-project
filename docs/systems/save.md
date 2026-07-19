@@ -25,20 +25,20 @@ Persist all player progression safely with fixed save slots and autosave-only be
 
 ## Current Status
 
-- [x] SaveManager autoload stub registered
-- [ ] 5-slot management (create, list, select, delete, overwrite)
-- [ ] Slot metadata for Save Slot Select UI
-- [ ] File format decision (JSON via `FileAccess`)
-- [ ] Version field and migration hook
-- [ ] Registry of saveable systems
-- [ ] Talent tree save data
-- [ ] Meta-currency / post-run reward save data
-- [ ] Run history save data
-- [ ] Map / character unlock save data
-- [ ] Active run checkpoint save / load
-- [ ] Resume / Forfeit interrupted run flow
-- [ ] Autosave-only flow
-- [ ] Atomic writes and `.bak` backup file
+- [x] SaveManager autoload
+- [x] 5-slot management (create, list, select, delete) — M6
+- [x] Slot metadata (`SaveMetadata`) — M6
+- [x] File format: JSON via `FileAccess`, one folder per slot — M6
+- [x] Version field on every payload — M6
+- [x] Registry of saveable systems (`register_saveable` / `unregister_saveable` API)
+- [ ] Talent tree save data (M7)
+- [ ] Meta-currency / post-run reward save data (M7)
+- [x] Run history save data (`run_history.json`, cap 100) — M6
+- [~] Map unlock save data (default pool per profile; runtime unlocks in M7)
+- [x] Active run checkpoint save / load (`active_run.json`) — M6
+- [x] Resume / Forfeit interrupted run flow — M6
+- [x] Autosave-only flow — M6 (checkpoint every 30s + on level-up; profile on run end)
+- [x] Atomic writes and `.bak` backup for `profile.json` — M6
 - [x] Talent progression save shape documented
 
 ## Design Rules
@@ -140,10 +140,11 @@ Permanent progression saves immediately after:
 
 Active run checkpoints save:
 
-- Every 30 seconds during an active run
-- After every level-up reward choice
+- Every 10 seconds during an active run (`RunManager.CHECKPOINT_INTERVAL_SECONDS`)
+- The moment a level-up card set is presented (level-up + spells given)
+- The moment the player picks a level-up card (after reward is applied)
+- On Leave-to-Hub (Pause Menu)
 - After boss / major event, later if those exist
-- On pause / quit request if possible
 
 Do not save every few seconds by default. Event-based autosave plus a 30-second timer avoids unnecessary disk writes and reduces stutter risk.
 
@@ -205,27 +206,43 @@ Rules:
 ```gdscript
 class_name SaveManager  # autoload
 
+signal current_slot_changed(slot: int)
 signal save_started(slot: int)
 signal save_completed(slot: int)
 signal load_completed(slot: int)
 signal autosave_started(slot: int)
 signal autosave_completed(slot: int)
 signal save_failed(slot: int, reason: String)
+signal slot_list_changed()
+signal run_history_updated(slot: int)
 
-func save_profile(slot: int) -> bool
-func load_profile(slot: int) -> bool
-func save_active_run(slot: int, run_data: Dictionary) -> bool
-func load_active_run(slot: int) -> Dictionary
-func has_active_run(slot: int) -> bool
-func forfeit_active_run(slot: int) -> bool
-func append_run_history(slot: int, entry: RunHistoryEntry) -> bool
-func load_run_history(slot: int) -> Array[RunHistoryEntry]
-func clear_run_history(slot: int) -> bool
+# Slot management
+func slot_count() -> int
 func list_slots() -> Array[SaveMetadata]
-func create_slot(slot: int) -> bool
-func delete(slot: int) -> bool
-func overwrite(slot: int) -> bool
+func get_slot_metadata(slot: int) -> SaveMetadata
+func slot_exists(slot: int) -> bool
+func create_slot(slot: int, character_name: String) -> bool
+func select_slot(slot: int) -> bool
+func unload_current_slot() -> void
+func delete_slot(slot: int) -> bool
+func current_slot() -> int
+func has_current_slot() -> bool
+func current_metadata() -> SaveMetadata
 
+# Profile
+func save_current_profile() -> bool
+
+# Active run checkpoint
+func has_active_run(slot: int = -1) -> bool
+func save_active_run(checkpoint: Dictionary) -> bool
+func load_active_run(slot: int = -1) -> Dictionary
+func clear_active_run(slot: int = -1) -> bool
+
+# Run history
+func get_run_history(slot: int = -1) -> Array[RunHistoryEntry]
+func append_run_history(entry: RunHistoryEntry) -> bool
+
+# Saveable registry (for future systems)
 func register_saveable(id: StringName, obj: Object) -> void
 func unregister_saveable(id: StringName) -> void
 ```

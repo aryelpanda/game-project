@@ -5,6 +5,7 @@ signal player_damaged(amount: float)
 signal player_died()
 signal player_leveled_up(new_level: int)
 signal mana_changed(current_mana: float, max_mana: float)
+signal health_changed(current_health: float, max_health: float)
 
 @export var stats_data: StatsData
 @export var basic_spell: SpellData
@@ -44,6 +45,9 @@ func _ready() -> void:
 
 	_health_bar = get_node_or_null("HealthBar")
 	_update_health_bar()
+
+	health_changed.emit(current_health, max_health)
+	mana_changed.emit(current_mana, max_mana)
 
 	print("[Player] Health: %.0f / %.0f" % [current_health, max_health])
 	print("[Player] Mana: %.0f / %.0f" % [current_mana, max_mana])
@@ -176,6 +180,7 @@ func take_damage(damage_event: DamageEvent) -> void:
 	var amount := damage_event.base_damage
 	current_health = maxf(current_health - amount, 0.0)
 	player_damaged.emit(amount)
+	health_changed.emit(current_health, max_health)
 	_update_health_bar()
 
 	print("[Player] Health: %.0f / %.0f" % [current_health, max_health])

@@ -30,11 +30,13 @@ Own the lifecycle of a single survival session: start the run, track time and ki
 - [x] XP gain and level-up threshold calculation (`RunProgressionData`)
 - [x] 3-choice reward generation (`RewardPoolData`)
 - [x] Temporary reward cleanup at run end
-- [x] Checkpoint export / restore (`to_checkpoint_dict` / `from_checkpoint_dict`; console log only in M3)
-- [ ] Resume active run
-- [ ] Forfeit active run
+- [x] Checkpoint export / restore (`to_checkpoint_dict` / `from_checkpoint_dict`; wired to SaveManager in M6)
+- [x] Resume active run (M6: `resume_run(checkpoint)` restores chosen spells/buffs/health)
+- [x] Forfeit active run (M6: `forfeit_run()` ends with `forfeit` reason, clears checkpoint)
+- [x] Autosave checkpoint (M6: every 10s + on level-up presented + on level-up card picked + on Leave-to-Hub)
+- [x] Leave to hub without ending run (M6: `leave_to_hub()` writes checkpoint, returns to Main)
 - [x] Run summary data (`RunSummary` Resource)
-- [ ] Run history entry data
+- [x] Run history entry data (`RunHistoryEntry` Resource, M6)
 - [x] Basic damage tracking (total dealt / taken)
 - [x] Per-spell damage tracking (summary snapshot)
 - [x] Timed run victory (`time_up` when `MapData.run_duration_seconds` elapsed)
@@ -43,7 +45,7 @@ Own the lifecycle of a single survival session: start the run, track time and ki
 ## Design Rules
 
 - Run owns session state. Player owns movement/health/mana; Enemies own behavior; UI displays run state.
-- A new run starts only after Profile Main Screen -> Start Run -> Map Selection (full UI in M6). **M5 boot:** auto-start via `RunManager.start_run(&"five_minute_gauntlet", &"default")` from Main.
+- A new run starts only after Profile Main Screen -> Start Run -> Map Selection (wired in M6). Main boots into Save Slot Select and only invokes `RunManager.start_run` after Map Selection.
 - Run receives the selected `map_id` and `character_id`.
 - Temporary Spells and Buffs gained from level-ups are cleared when the run ends.
 - The Run system asks Skills/Buffs to apply rewards; it does not implement spell or buff behavior.
@@ -67,30 +69,48 @@ class_name RunManager
 
 signal run_started(map_id: StringName)
 signal run_ended(summary: RunSummary)
-signal run_history_entry_created(entry: RunHistoryEntry)
-signal run_resumed(map_id: StringName)
-signal run_forfeited()
 signal run_timer_changed(seconds: float)
 signal kill_count_changed(kills: int)
+signal xp_changed(current_xp: int, xp_to_next: int)
+signal run_level_changed(level: int)
 signal level_up_available(options: Array)
+signal run_powers_changed()
 
 func start_run(map_id: StringName, character_id: StringName) -> void
 func resume_run(checkpoint: Dictionary) -> void
-func forfeit_run() -> void
+func restart_run() -> void
+func forfeit_run() -> RunSummary
+func leave_to_hub() -> void
 func end_run(reason: StringName) -> RunSummary
 func register_enemy_kill(enemy_data: EnemyData) -> void
 func register_spell_damage(spell_id: StringName, amount: float) -> void
-func register_spell_kill(spell_id: StringName, enemy_data: EnemyData) -> void
 func grant_all_test_rewards() -> void
 func end_run_for_testing() -> void
 func add_experience(amount: int) -> void
 func choose_level_up_reward(reward_id: StringName) -> void
 func current_run_level() -> int
 func current_kill_count() -> int
+func current_xp() -> int
+func xp_to_next_level() -> int
+func get_elapsed_seconds() -> float
+func is_active() -> bool
+func is_level_up_choice() -> bool
 func to_checkpoint_dict() -> Dictionary
 func from_checkpoint_dict(data: Dictionary) -> void
-func build_history_entry(summary: RunSummary) -> RunHistoryEntry
 ```
+
+## M6 Checkpoint Contract
+
+The dictionary produced by `to_checkpoint_dict()` and consumed by `resume_run()` includes:
+
+- `map_id`, `character_id`, `elapsed_seconds`, `kill_count`
+- `xp_collected`, `current_xp`, `run_level`, `level_ups_gained`
+- `chosen_spells`, `chosen_buffs` (string IDs, order = order acquired)
+- `chosen_spell_levels`, `chosen_buff_stacks` (per-power levels/stacks so resume rebuilds them)
+- `total_damage_done`, `damage_taken`
+- `player_current_health`, `player_max_health`
+
+M6 restores chosen spells (with their leveled state) and stacked buffs on the fresh Player node after the map scene loads. Enemy/spawner state is intentionally re-rolled (not persisted) for MVP.
 
 ## RunSummary Data
 

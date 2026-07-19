@@ -1,6 +1,6 @@
 # ROADMAP.md
 
-Version: 0.13
+Version: 0.15
 
 > Milestones are ordered by **dependency**, not calendar. Do not skip ahead. Each milestone should be shippable-in-principle: it either compiles and runs cleanly, or it doesn't get merged.
 
@@ -69,7 +69,7 @@ Goal: the first rough survivor-style run starts, spawns hordes, tracks time/kill
 - [x] Timer and kill counter.
 - [x] Basic run stats collected: duration, kills, damage, XP, final level.
 - [x] Basic map / arena loaded through World.
-- [ ] Basic Map Selection flow before starting a run (UI deferred to M6; M3 auto-starts `test_arena`).
+- [x] Basic Map Selection flow before starting a run (implemented in M6).
 - [x] Enemy horde spawner that ramps over time.
 - [x] Death ends the run and returns to summary placeholder.
 - [x] Run can export checkpoint data for autosave (console stub; SaveManager wiring in M6/M7).
@@ -119,27 +119,27 @@ Goal: gameplay values move from code to Resources. First intentional map: **Five
 
 ---
 
-## M6 — Run UI Pass  `Status: Not Started`
+## M6 — Run UI Pass  `Status: Done`
 
 Goal: player can understand the run state and make level-up choices.
 
-- [ ] Save Slot Select screen with at least 5 slots.
-- [ ] Resume / Forfeit modal when selected slot has an active run checkpoint.
-- [ ] Profile Main Screen / hub showing selected character in the center.
-- [ ] Hub navigation: Start Run, Talent Tree, Inventory, Run History, Stats, Settings, Back to Slot Select.
-- [ ] Map Selection screen opened from Start Run.
-- [ ] Non-blocking autosave indicator.
-- [ ] HUD: health, mana, XP bar, run level, timer, kills.
-- [ ] Level-up choice screen with 3 random Spell / Buff cards.
+- [x] Save Slot Select screen with at least 5 slots.
+- [x] Resume / Forfeit modal when selected slot has an active run checkpoint.
+- [x] Profile Main Screen / hub showing selected character in the center.
+- [x] Hub navigation: Start Run, Talent Tree, Inventory, Run History, Stats, Settings, Back to Slot Select.
+- [x] Map Selection screen opened from Start Run.
+- [x] Non-blocking autosave indicator.
+- [x] HUD: health, mana, XP bar, run level, timer, kills.
+- [x] Level-up choice screen with 3 random Spell / Buff cards.
 - [x] Run summary screen (time survived, enemies killed, spells/buffs, per-spell damage).
-- [ ] Run History screen showing latest completed / forfeited runs.
-- [ ] Run History details screen showing map, time, character, kills, damage, chosen Spells/Buffs, and per-Spell stats.
-- [ ] Character Stats screen from the hub shows base stats, permanent bonuses, final values, and passive Buff sources.
-- [ ] In-run Character Stats screen shows base stats, permanent bonuses, temporary run bonuses, final current values, and temporary sources.
-- [ ] Pause menu.
-- [ ] Basic tooltips.
-- [ ] `systems/ui/` — reusable UI components.
-- [ ] All numbers displayed come from the Stats / Combat systems (UI does not own state).
+- [x] Run History screen showing latest completed / forfeited runs.
+- [x] Run History details screen showing map, time, character, kills, damage, chosen Spells/Buffs, and per-Spell stats.
+- [x] Character Stats screen from the hub shows base stats and final values (permanent bonuses layer wired in M7).
+- [x] In-run Character Stats screen shows base stats, temporary run bonuses, final current values, and temporary Buff sources.
+- [x] Pause menu (Esc / gamepad Select; Resume / Character Stats / Leave to Hub / Forfeit).
+- [~] Basic tooltips (uses Godot built-in `tooltip_text`; custom tooltip system deferred to feature-specific screens).
+- [x] `systems/ui/` — reusable UI components (`UIStatBar`, `UIConfirmDialog`, `UIManager` screen/modal stack).
+- [x] All numbers displayed come from the Stats / Combat / Save systems (UI does not own state).
 
 ---
 
@@ -283,6 +283,7 @@ Goal: 1.0 release.
 
 ## Changelog
 
+- v0.15 - M6 Run UI Pass completed: Save Slot Select, Resume/Forfeit modal, Profile Hub, Map Select, Run History (list + details), Character Stats (out-of-run + in-run), Pause Menu, Autosave Indicator, HUD vitals, thin 5-slot SaveManager runtime with atomic JSON writes.
 - v0.14 - M5 Data-Driven Content completed: Five Minute Gauntlet map, timed victory, compounding spawn, weighted enemies, spell/buff leveling.
 - v0.13 - M5 design approved: Five Minute Gauntlet first map spec, spell/buff leveling, tank enemy. Implementation not started.
 - v0.12 - added milestone branching rules (branch per M#, tag on merge for rollback).

@@ -29,26 +29,26 @@ Display save-slot selection, the profile main screen, survivor run state, and ou
 
 ## Current Status
 
-- [x] UIManager autoload stub registered
-- [ ] Save Slot Select screen
-- [ ] Resume / Forfeit modal
-- [ ] Profile Main Screen / hub
-- [ ] Map Selection screen
-- [ ] Autosave indicator
-- [x] HUD scaffold (M3 timer/kills; M4 XP bar + level)
+- [x] UIManager screen stack + modal layer + toast (M6)
+- [x] Save Slot Select screen (M6)
+- [x] Resume / Forfeit modal (M6)
+- [x] Profile Main Screen / hub (M6)
+- [x] Map Selection screen (M6)
+- [x] Autosave indicator (M6 non-blocking fade)
+- [x] HUD: timer, kills, run level, XP bar, HP, mana (M6 adds vitals + Stats button)
 - [x] Level-up choice screen (M4 minimal overlay; green effect line per reward)
 - [x] Run powers panel (M4 right-side active spell/buff list + test grant-all / end-run buttons)
-- [x] Run summary screen (time, kills, spells/buffs with levels, per-spell damage)
-- [ ] Run History screen
-- [ ] Run History details screen
-- [ ] Talent tree screen
-- [ ] Inventory screen placeholder
-- [ ] Character Stats screen placeholder
-- [ ] Settings screen
-- [ ] Pause menu
-- [ ] Main menu
-- [ ] Tooltip system
-- [ ] Notification queue
+- [x] Run summary screen (time, kills, spells/buffs with levels, per-spell damage; M6 adds "Return to Hub" button)
+- [x] Run History screen (M6)
+- [x] Run History details screen (M6)
+- [~] Talent tree screen (M6 placeholder; full behavior in M7)
+- [~] Inventory screen placeholder (M6)
+- [x] Character Stats screen (M6 out-of-run and in-run modes)
+- [~] Settings screen (M6 stub; full options in M11)
+- [x] Pause menu (M6: Esc / gamepad Select; Resume / Stats / Leave / Forfeit)
+- [ ] Main menu (folded into Save Slot Select for MVP)
+- [~] Tooltip system (M6 uses Godot built-in `tooltip_text`; custom system deferred)
+- [~] Notification queue (M6: simple toast via UIManager)
 - [x] Talent Tree screen MVP behavior documented
 - [x] Character Stats screen behavior documented
 
@@ -202,26 +202,26 @@ Exact numbers and starting values are intentionally TBD until character balance 
 ```gdscript
 class_name UIManager  # autoload
 
+signal screen_pushed(screen: Control)
+signal screen_popped(screen: Control)
+
+# Screen stack (fullscreen). Pushing hides the previous screen.
 func push_screen(scene: PackedScene) -> Control
+func replace_screen(scene: PackedScene) -> Control
 func pop_screen() -> void
+func clear_screens() -> void
+func current_screen() -> Control
+
+# Modals (drawn above screens; do NOT hide the screen behind).
+func push_modal(scene: PackedScene) -> Control
+func pop_modal() -> void
+func clear_modals() -> void
+
+# Notifications.
 func show_toast(message: String, duration: float = 3.0) -> void
-func show_tooltip(anchor: Control, item: ItemData) -> void
-func show_save_slot_select(slots: Array[SaveMetadata]) -> void
-func show_resume_or_forfeit(slot: int) -> void
-func show_profile_main_screen(slot: int) -> void
-func show_map_selection(maps: Array[MapData]) -> void
-func show_autosave_indicator(active: bool) -> void
-func show_level_up_choices(options: Array) -> void
-func show_run_summary(summary: RunSummary) -> void
-func show_run_history(entries: Array[RunHistoryEntry]) -> void
-func show_run_history_details(entry: RunHistoryEntry) -> void
-func show_talent_tree(character_id: StringName) -> void
-func show_inventory() -> void
-func show_character_stats(character_id: StringName) -> void
-func show_run_character_stats(character_id: StringName) -> void
-func show_settings() -> void
-func return_to_slot_select() -> void
 ```
+
+Screens live on a persistent `CanvasLayer` (layer 100) as a child of the `UIManager` autoload, so they survive `change_scene_to_file` calls. Modals live on a separate always-processing layer (layer 110). Each concrete screen script (Save Slot Select, Profile Hub, Map Select, Run History, Character Stats, Settings, Pause Menu, Resume/Forfeit modal) owns its own layout and reads state directly from the owning system (Save, Run, Player).
 
 ## Dependencies
 

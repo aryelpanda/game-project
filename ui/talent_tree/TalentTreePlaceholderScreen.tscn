@@ -1,0 +1,63 @@
+[gd_scene load_steps=2 format=3 uid="uid://ctalenttreeplacem6"]
+
+[ext_resource type="Script" path="res://ui/talent_tree/talent_tree_placeholder_screen.gd" id="1_talent"]
+
+[node name="TalentTreePlaceholderScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+script = ExtResource("1_talent")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.06, 0.07, 0.11, 1)
+
+[node name="Layout" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = 24.0
+offset_right = -40.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+
+[node name="TitleLabel" type="Label" parent="Layout"]
+layout_mode = 2
+text = "Talent Trees"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 26
+
+[node name="Body" type="Label" parent="Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Talent Trees will land in M7.
+
+The M7 pass adds:
+- 3 magic-school trees (Ember, Frost, Arcane)
+- 10 placeholder Talents per tree
+- Free spending, reset, and game-master toggle
+- Talent-granted permanent Buffs and unlocked Spells"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Footer" type="HBoxContainer" parent="Layout"]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="Layout/Footer"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 36)
+text = "Back"

@@ -56,6 +56,19 @@ func despawn(projectile: Projectile) -> void:
 		_pool.append(projectile)
 
 
+func despawn_all_active() -> void:
+	var snapshot := _active.duplicate()
+	for projectile in snapshot:
+		if not projectile:
+			continue
+		if projectile in _active:
+			_active.erase(projectile)
+		projectile.set_deferred("monitoring", false)
+		projectile.reset_for_pool()
+		if projectile not in _pool:
+			_pool.append(projectile)
+
+
 func _acquire_projectile() -> Projectile:
 	while not _pool.is_empty():
 		var projectile: Projectile = _pool.pop_back()
