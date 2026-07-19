@@ -13,6 +13,8 @@ signal level_up_available(options: Array)
 signal run_powers_changed()
 
 const DEFAULT_PROGRESSION_PATH := "res://content/run/m4_default_progression.tres"
+const MAIN_SCENE_PATH := "res://scenes/main/Main.tscn"
+const CHECKPOINT_INTERVAL_SECONDS := 10.0
 
 var _state: RunState = RunState.NOT_STARTED
 var _map_id: StringName = &""
@@ -32,6 +34,9 @@ var _chosen_buffs: Array[StringName] = []
 var _pending_level_up_options: Array = []
 var _progression: RunProgressionData
 var _player_death_connected: bool = false
+var _started_at_unix: int = 0
+var _last_checkpoint_time: float = 0.0
+var _resume_pending_checkpoint: Dictionary = {}
 
 
 func _ready() -> void:
@@ -49,6 +54,10 @@ func _process(delta: float) -> void:
 	_elapsed_seconds += delta
 	run_timer_changed.emit(_elapsed_seconds)
 
+	if _elapsed_seconds - _last_checkpoint_time >= CHECKPOINT_INTERVAL_SECONDS:
+		_last_checkpoint_time = _elapsed_seconds
+		_write_checkpoint()
+
 	var map_data := World.get_current_map_data()
 	if map_data and map_data.run_duration_seconds > 0.0:
 		if _elapsed_seconds >= map_data.run_duration_seconds:
@@ -58,6 +67,7 @@ func _process(delta: float) -> void:
 func start_run(map_id: StringName, character_id: StringName) -> void:
 	_stop_horde_spawner()
 	EnemyManager.despawn_all_active()
+	ProjectileManager.despawn_all_active()
 	_clear_player_run_powers()
 
 	_reset_run_stats()
@@ -65,12 +75,56 @@ func start_run(map_id: StringName, character_id: StringName) -> void:
 	_character_id = character_id
 	_state = RunState.STARTING
 	_player_death_connected = false
+	_started_at_unix = int(Time.get_unix_time_from_system())
+	_last_checkpoint_time = 0.0
+	_resume_pending_checkpoint = {}
 
 	World.load_map(map_id)
 
 
 func restart_run() -> void:
 	start_run(_map_id if _map_id != &"" else &"test_arena", _character_id if _character_id != &"" else &"default")
+
+
+func resume_run(checkpoint: Dictionary) -> void:
+	if checkpoint.is_empty():
+		push_warning("RunManager.resume_run called with an empty checkpoint")
+		return
+
+	_stop_horde_spawner()
+	EnemyManager.despawn_all_active()
+	ProjectileManager.despawn_all_active()
+	_clear_player_run_powers()
+
+	_reset_run_stats()
+	from_checkpoint_dict(checkpoint)
+	_state = RunState.STARTING
+	_player_death_connected = false
+	_started_at_unix = int(Time.get_unix_time_from_system())
+	_last_checkpoint_time = _elapsed_seconds
+	_resume_pending_checkpoint = checkpoint.duplicate(true)
+
+	if _map_id == &"":
+		push_warning("RunManager.resume_run: checkpoint had no map_id, falling back to test_arena")
+		_map_id = &"test_arena"
+
+	World.load_map(_map_id)
+
+
+func forfeit_run() -> RunSummary:
+	return end_run(&"forfeit")
+
+
+func leave_to_hub() -> void:
+	if _state == RunState.ACTIVE or _state == RunState.LEVEL_UP_CHOICE:
+		_write_checkpoint()
+
+	_state = RunState.ENDED
+	_stop_horde_spawner()
+	EnemyManager.despawn_all_active()
+	ProjectileManager.despawn_all_active()
+	Core.set_paused(false)
+	get_tree().change_scene_to_file(MAIN_SCENE_PATH)
 
 
 func end_run(reason: StringName) -> RunSummary:
@@ -87,8 +141,8 @@ func end_run(reason: StringName) -> RunSummary:
 	_clear_player_run_powers()
 	run_ended.emit(summary)
 
-	var checkpoint := to_checkpoint_dict()
-	print("[RunManager] Checkpoint export: %s" % JSON.stringify(checkpoint))
+	_persist_run_history(summary)
+	SaveManager.clear_active_run()
 
 	return summary
 
@@ -127,6 +181,7 @@ func choose_level_up_reward(reward_id: StringName) -> void:
 
 	_apply_reward_option(selected)
 	_pending_level_up_options.clear()
+	_write_checkpoint()
 	_resume_from_level_up()
 
 
@@ -218,6 +273,20 @@ func to_checkpoint_dict() -> Dictionary:
 		player_health = player.current_health
 		player_max_health = player.max_health
 
+	var spell_levels: Array = []
+	var buff_stacks: Array = []
+	if player:
+		for spell_id in _chosen_spells:
+			var level := 1
+			if player.has_method("get_run_spell_level"):
+				level = maxi(player.get_run_spell_level(spell_id), 1)
+			spell_levels.append({"id": String(spell_id), "level": level})
+		for buff_id in _chosen_buffs:
+			var stacks := 1
+			if player.has_method("get_buff_stack_count"):
+				stacks = maxi(player.get_buff_stack_count(buff_id), 1)
+			buff_stacks.append({"id": String(buff_id), "stacks": stacks})
+
 	return {
 		"map_id": String(_map_id),
 		"character_id": String(_character_id),
@@ -229,6 +298,8 @@ func to_checkpoint_dict() -> Dictionary:
 		"level_ups_gained": _level_ups_gained,
 		"chosen_spells": _chosen_spells.map(func(id): return String(id)),
 		"chosen_buffs": _chosen_buffs.map(func(id): return String(id)),
+		"chosen_spell_levels": spell_levels,
+		"chosen_buff_stacks": buff_stacks,
 		"total_damage_done": _total_damage_done,
 		"damage_taken": _damage_taken,
 		"player_current_health": player_health,
@@ -269,6 +340,9 @@ func _on_map_loaded(map_id: StringName) -> void:
 
 	call_deferred("_connect_player_death")
 	call_deferred("_start_horde_spawner")
+
+	if not _resume_pending_checkpoint.is_empty():
+		call_deferred("_apply_resume_checkpoint")
 
 
 func _on_enemy_killed(enemy_data: EnemyData) -> void:
@@ -333,6 +407,7 @@ func _trigger_level_up_choice() -> void:
 	_pending_level_up_options = _generate_level_up_options()
 	level_up_available.emit(_pending_level_up_options)
 	print("[RunManager] Level %d — choose a reward" % _run_level)
+	_write_checkpoint()
 
 
 func _resume_from_level_up() -> void:
@@ -618,3 +693,118 @@ func _snapshot_buff_powers() -> Array:
 		})
 
 	return entries
+
+
+func _write_checkpoint() -> void:
+	if not SaveManager.has_current_slot():
+		return
+	SaveManager.save_active_run(to_checkpoint_dict())
+
+
+func _apply_resume_checkpoint() -> void:
+	var checkpoint := _resume_pending_checkpoint
+	_resume_pending_checkpoint = {}
+
+	var player := _find_player()
+	if not player:
+		return
+
+	var pool := _get_reward_pool()
+	if pool:
+		var spell_levels: Dictionary = _levels_to_map(checkpoint.get("chosen_spell_levels", []), "level")
+		var buff_stacks: Dictionary = _levels_to_map(checkpoint.get("chosen_buff_stacks", []), "stacks")
+
+		for spell_id_str in checkpoint.get("chosen_spells", []):
+			var spell_id := StringName(String(spell_id_str))
+			var spell := _find_reward_spell(pool, spell_id)
+			if not spell:
+				continue
+			var target_level: int = int(spell_levels.get(spell_id, 1))
+			player.grant_run_spell(spell)
+			for i in range(target_level - 1):
+				player.upgrade_run_spell(spell)
+		for buff_id_str in checkpoint.get("chosen_buffs", []):
+			var buff_id := StringName(String(buff_id_str))
+			var buff := _find_reward_buff(pool, buff_id)
+			if not buff:
+				continue
+			var target_stacks: int = int(buff_stacks.get(buff_id, 1))
+			for i in range(target_stacks):
+				player.apply_buff(buff)
+
+	var restored_health := float(checkpoint.get("player_current_health", -1.0))
+	var restored_max := float(checkpoint.get("player_max_health", -1.0))
+	if restored_health > 0.0 and player.get("current_health") != null:
+		if restored_max > 0.0:
+			player.max_health = restored_max
+		player.current_health = clampf(restored_health, 0.0, player.max_health)
+		player.health_changed.emit(player.current_health, player.max_health)
+		if player.has_method("_update_health_bar"):
+			player.call("_update_health_bar")
+
+	run_powers_changed.emit()
+
+
+func _levels_to_map(entries: Array, value_key: String) -> Dictionary:
+	var out: Dictionary = {}
+	for raw in entries:
+		if not raw is Dictionary:
+			continue
+		var dict: Dictionary = raw
+		var id_str := String(dict.get("id", ""))
+		if id_str.is_empty():
+			continue
+		out[StringName(id_str)] = int(dict.get(value_key, 1))
+	return out
+
+
+func _find_reward_spell(pool: RewardPoolData, spell_id: StringName) -> SpellData:
+	for spell in pool.spells:
+		if spell and spell.id == spell_id:
+			return spell
+	return null
+
+
+func _find_reward_buff(pool: RewardPoolData, buff_id: StringName) -> BuffData:
+	for buff in pool.buffs:
+		if buff and buff.id == buff_id:
+			return buff
+	return null
+
+
+func _persist_run_history(summary: RunSummary) -> void:
+	if not SaveManager.has_current_slot():
+		return
+
+	var entry := RunHistoryEntry.new()
+	entry.started_at = _started_at_unix
+	entry.ended_at = int(Time.get_unix_time_from_system())
+	entry.map_id = summary.map_id
+	entry.character_id = summary.character_id
+	entry.end_reason = summary.end_reason
+	entry.duration_seconds = summary.duration_seconds
+	entry.final_level = summary.final_level
+	entry.total_kills = summary.total_kills
+	entry.total_damage_done = summary.total_damage_done
+	entry.damage_taken = summary.damage_taken
+	entry.xp_collected = summary.xp_collected
+	entry.spell_powers = _stringify_id_entries(summary.spell_powers, "spell_id")
+	entry.buff_powers = _stringify_id_entries(summary.buff_powers, "buff_id")
+	SaveManager.append_run_history(entry)
+
+	var meta := SaveManager.current_metadata()
+	if meta:
+		meta.total_play_seconds += summary.duration_seconds
+		SaveManager.save_current_profile()
+
+
+func _stringify_id_entries(entries: Array, id_key: String) -> Array:
+	var out: Array = []
+	for raw in entries:
+		if not raw is Dictionary:
+			continue
+		var dict: Dictionary = (raw as Dictionary).duplicate()
+		if dict.has(id_key):
+			dict[id_key] = String(dict[id_key])
+		out.append(dict)
+	return out

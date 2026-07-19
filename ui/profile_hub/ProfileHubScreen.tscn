@@ -1,0 +1,123 @@
+[gd_scene load_steps=2 format=3 uid="uid://cprofilehubm6"]
+
+[ext_resource type="Script" path="res://ui/profile_hub/profile_hub_screen.gd" id="1_hub"]
+
+[node name="ProfileHubScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+script = ExtResource("1_hub")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.08, 0.09, 0.13, 1)
+
+[node name="Layout" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_left = 24.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = -24.0
+theme_override_constants/separation = 16
+
+[node name="Header" type="HBoxContainer" parent="Layout"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="CharacterLabel" type="Label" parent="Layout/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Character"
+theme_override_font_sizes/font_size = 28
+
+[node name="SlotLabel" type="Label" parent="Layout/Header"]
+layout_mode = 2
+text = "Slot 1"
+horizontal_alignment = 2
+theme_override_font_sizes/font_size = 20
+
+[node name="Body" type="HBoxContainer" parent="Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 24
+
+[node name="CenterColumn" type="VBoxContainer" parent="Layout/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="PortraitFrame" type="PanelContainer" parent="Layout/Body/CenterColumn"]
+layout_mode = 2
+custom_minimum_size = Vector2(360, 480)
+size_flags_horizontal = 4
+
+[node name="Portrait" type="ColorRect" parent="Layout/Body/CenterColumn/PortraitFrame"]
+layout_mode = 2
+color = Color(0.4, 0.65, 0.9, 1)
+
+[node name="PortraitLabel" type="Label" parent="Layout/Body/CenterColumn/PortraitFrame"]
+layout_mode = 2
+text = "Character"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 24
+
+[node name="RightColumn" type="VBoxContainer" parent="Layout/Body"]
+layout_mode = 2
+custom_minimum_size = Vector2(260, 0)
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="StartRunButton" type="Button" parent="Layout/Body/RightColumn"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 44)
+text = "Start Run"
+theme_override_font_sizes/font_size = 20
+
+[node name="TalentButton" type="Button" parent="Layout/Body/RightColumn"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 36)
+text = "Talent Tree"
+
+[node name="InventoryButton" type="Button" parent="Layout/Body/RightColumn"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 36)
+text = "Inventory"
+
+[node name="HistoryButton" type="Button" parent="Layout/Body/RightColumn"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 36)
+text = "Run History"
+
+[node name="StatsButton" type="Button" parent="Layout/Body/RightColumn"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 36)
+text = "Stats"
+
+[node name="SettingsButton" type="Button" parent="Layout/Body/RightColumn"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 36)
+text = "Settings"
+
+[node name="Footer" type="HBoxContainer" parent="Layout"]
+layout_mode = 2
+alignment = 0
+
+[node name="BackButton" type="Button" parent="Layout/Footer"]
+layout_mode = 2
+custom_minimum_size = Vector2(200, 36)
+text = "Back to Slot Select"

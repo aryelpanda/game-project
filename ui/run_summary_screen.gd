@@ -1,13 +1,16 @@
-## Placeholder run end summary. Displays RunSummary data and offers restart.
+## Placeholder run end summary. Displays RunSummary data and offers restart /
+## return to the Profile Hub. Restart re-enters the last-played map.
 extends Control
 
 @onready var _stats_label: Label = $Panel/StatsLabel
-@onready var _restart_button: Button = $Panel/RestartButton
+@onready var _restart_button: Button = $Panel/ButtonRow/RestartButton
+@onready var _hub_button: Button = $Panel/ButtonRow/HubButton
 
 
 func _ready() -> void:
 	hide()
 	_restart_button.pressed.connect(_on_restart_pressed)
+	_hub_button.pressed.connect(_on_hub_pressed)
 	RunManager.run_ended.connect(_on_run_ended)
 	RunManager.run_started.connect(_on_run_started)
 
@@ -75,10 +78,18 @@ func _format_end_reason(reason: StringName) -> String:
 		return "Time Survived!"
 	if reason == &"death":
 		return "Defeated"
+	if reason == &"forfeit":
+		return "Forfeited"
 	if reason == &"debug_end":
 		return "Run Ended (Test)"
 	return "Run Over (%s)" % reason
 
 
 func _on_restart_pressed() -> void:
+	hide()
 	RunManager.restart_run()
+
+
+func _on_hub_pressed() -> void:
+	hide()
+	RunManager.leave_to_hub()

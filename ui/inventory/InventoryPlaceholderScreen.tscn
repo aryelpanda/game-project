@@ -1,0 +1,59 @@
+[gd_scene load_steps=2 format=3 uid="uid://cinventoryplacem6"]
+
+[ext_resource type="Script" path="res://ui/inventory/inventory_placeholder_screen.gd" id="1_inv"]
+
+[node name="InventoryPlaceholderScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+script = ExtResource("1_inv")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.06, 0.07, 0.11, 1)
+
+[node name="Layout" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = 24.0
+offset_right = -40.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+
+[node name="TitleLabel" type="Label" parent="Layout"]
+layout_mode = 2
+text = "Inventory"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 26
+
+[node name="Body" type="Label" parent="Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Inventory is de-prioritized for the early survivor MVP.
+
+Placeholder screen for now."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Footer" type="HBoxContainer" parent="Layout"]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="Layout/Footer"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 36)
+text = "Back"

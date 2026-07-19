@@ -1,0 +1,72 @@
+[gd_scene load_steps=2 format=3 uid="uid://cstatsscreenm6"]
+
+[ext_resource type="Script" path="res://ui/character_stats/character_stats_screen.gd" id="1_stats"]
+
+[node name="CharacterStatsScreen" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+script = ExtResource("1_stats")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.06, 0.07, 0.11, 0.98)
+
+[node name="Layout" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = 24.0
+offset_right = -40.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+
+[node name="TitleLabel" type="Label" parent="Layout"]
+layout_mode = 2
+text = "Character Stats"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 26
+
+[node name="ScrollBox" type="ScrollContainer" parent="Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RowsContainer" type="VBoxContainer" parent="Layout/ScrollBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="TempSection" type="VBoxContainer" parent="Layout/ScrollBox"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="TempTitle" type="Label" parent="Layout/ScrollBox/TempSection"]
+layout_mode = 2
+text = "Temporary Run Buffs"
+
+[node name="TempList" type="VBoxContainer" parent="Layout/ScrollBox/TempSection"]
+layout_mode = 2
+
+[node name="Footer" type="HBoxContainer" parent="Layout"]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="Layout/Footer"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 36)
+text = "Back"
