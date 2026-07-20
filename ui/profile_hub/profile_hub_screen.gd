@@ -5,7 +5,7 @@ extends Control
 const MAP_SELECT_SCENE := preload("res://ui/map_select/MapSelectScreen.tscn")
 const RUN_HISTORY_SCENE := preload("res://ui/run_history/RunHistoryScreen.tscn")
 const CHARACTER_STATS_SCENE := preload("res://ui/character_stats/CharacterStatsScreen.tscn")
-const TALENT_TREE_SCENE := preload("res://ui/talent_tree/TalentTreePlaceholderScreen.tscn")
+const TALENT_TREE_SCENE := preload("res://ui/talent_tree/TalentTreeScreen.tscn")
 const INVENTORY_SCENE := preload("res://ui/inventory/InventoryPlaceholderScreen.tscn")
 const SETTINGS_SCENE := preload("res://ui/settings/SettingsScreen.tscn")
 

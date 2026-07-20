@@ -60,12 +60,20 @@ func _render_out_of_run() -> void:
 		_add_row("(no stats data)", "", "", "")
 		return
 
+	# Permanent bonuses come from the player's spent Talents (M7).
+	var preview: StatsBlock = TalentManager.get_permanent_preview()
+
 	_add_header_row()
 	for row in STAT_ROWS:
 		var stat_id: StringName = row["id"]
 		var label: String = row["label"]
 		var base := stats_data.get_value(stat_id)
-		_add_row(label, _format_number(base), "-", _format_number(base))
+		var final := preview.get_stat(stat_id) if preview else base
+		var permanent := final - base
+		var permanent_text := "-"
+		if abs(permanent) > 0.001:
+			permanent_text = _format_signed(permanent)
+		_add_row(label, _format_number(base), permanent_text, _format_number(final))
 
 
 func _render_in_run() -> void:

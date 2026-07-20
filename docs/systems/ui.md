@@ -41,7 +41,7 @@ Display save-slot selection, the profile main screen, survivor run state, and ou
 - [x] Run summary screen (time, kills, spells/buffs with levels, per-spell damage; M6 adds "Return to Hub" button)
 - [x] Run History screen (M6)
 - [x] Run History details screen (M6)
-- [~] Talent tree screen (M6 placeholder; full behavior in M7)
+- [x] Talent tree screen (M7: WotLK-style tiered grid, rank badges, arrows, tooltips, reset + game-master controls)
 - [~] Inventory screen placeholder (M6)
 - [x] Character Stats screen (M6 out-of-run and in-run modes)
 - [~] Settings screen (M6 stub; full options in M11)
@@ -138,6 +138,16 @@ Map Selection is opened from **Start Run** on the Profile Main Screen.
 It shows unlocked maps from Save / World data and returns the selected `map_id` to Run.
 
 ## Talent Tree Screen
+
+Implemented in M7 (`ui/talent_tree/`): `TalentTreeScreen` shows the 3 trees side
+by side using a WoW WotLK-style tiered grid. Each `TalentNode` is a placeholder
+colored icon (theme color + initials) with a `cur/max` rank badge and a gold
+border when maxed; hovering shows a tooltip (name, rank, description, effects,
+spell unlock). `TalentTreePanel` positions nodes by `tier`/`column` and draws
+decorative prerequisite arrows (`TalentTreeGrid`). The header shows points
+remaining, a testing `Reset` button (confirm dialog), and a `Game Master`
+toggle. Left-click spends a point; right-click refunds one. This is the
+visual style of WotLK only — the MVP is free-spend with no tier-gating.
 
 The first Talent Tree screen is a testing-focused MVP for permanent progression. It should be clear and replaceable rather than visually final.
 

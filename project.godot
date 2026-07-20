@@ -18,6 +18,7 @@ config/features=PackedStringArray("4.7")
 
 Core="*res://systems/core/core.gd"
 SaveManager="*res://systems/save/save_manager.gd"
+TalentManager="*res://systems/skills/talent_manager.gd"
 AudioManager="*res://systems/audio/audio_manager.gd"
 UIManager="*res://systems/ui/ui_manager.gd"
 DamageManager="*res://systems/combat/damage_manager.gd"

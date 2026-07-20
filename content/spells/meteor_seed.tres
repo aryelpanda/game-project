@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="SpellData" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://systems/skills/spell_data.gd" id="1_spell"]
+[ext_resource type="Script" path="res://systems/projectiles/projectile_data.gd" id="2_projectile"]
+[ext_resource type="SpriteFrames" path="res://assets/spells/fireball/fireball_frames.tres" id="3_frames"]
+
+[sub_resource type="Resource" id="ProjectileData_meteor_seed"]
+script = ExtResource("2_projectile")
+speed = 260.0
+lifetime = 3.5
+pierce_count = 0
+collision_mask = 2
+radius = 16.0
+sprite_frames = ExtResource("3_frames")
+animation_name = &"spin"
+visual_size_multiplier = 3.0
+
+[resource]
+script = ExtResource("1_spell")
+id = &"meteor_seed"
+display_name = "Meteor Seed"
+description = "Talent-granted: hurls a heavy meteor on a slow timer."
+level_up_effect_text = "Unlocks Meteor Seed"
+spell_type = &"auto_projectile"
+cooldown = 4.0
+mana_cost = 0.0
+is_talent_granted = true
+base_damage = 70.0
+damage_type = &"fire"
+projectile_data = SubResource("ProjectileData_meteor_seed")

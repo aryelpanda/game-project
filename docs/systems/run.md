@@ -41,6 +41,7 @@ Own the lifecycle of a single survival session: start the run, track time and ki
 - [x] Per-spell damage tracking (summary snapshot)
 - [x] Timed run victory (`time_up` when `MapData.run_duration_seconds` elapsed)
 - [x] Repeat level-up reward upgrades (spell levels, buff stacks)
+- [x] Post-run talent-point reward (M7: flat `TALENT_POINTS_PER_RUN` on non-forfeit end -> `TalentManager.add_points`; 0 for forfeit/debug)
 
 ## Design Rules
 
@@ -51,7 +52,7 @@ Own the lifecycle of a single survival session: start the run, track time and ki
 - The Run system asks Skills/Buffs to apply rewards; it does not implement spell or buff behavior.
 - Level-up rewards can be picked again to upgrade spells or stack buffs (M5).
 - Run end rewards are permanent only after the Run system hands them to Save / meta-progression.
-- Exact post-run reward formula is TBD and must remain easy to replace.
+- Exact post-run reward formula is TBD and must remain easy to replace. M7 grants a flat `TALENT_POINTS_PER_RUN` (3) on any non-forfeit end via `TalentManager.add_points`; a real formula is deferred to M9 balance. The amount is mirrored on `RunSummary.talent_points_awarded` for the summary screen.
 - Run must expose checkpoint data for SaveManager.
 - A checkpoint can restore temporary Spells, Buffs, XP, level, timer, kills, map, player state, and enemy/spawner state needed to resume.
 - Normal run end deletes the active run checkpoint after permanent rewards are safely applied.

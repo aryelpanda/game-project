@@ -1,6 +1,6 @@
 # ROADMAP.md
 
-Version: 0.15
+Version: 0.16
 
 > Milestones are ordered by **dependency**, not calendar. Do not skip ahead. Each milestone should be shippable-in-principle: it either compiles and runs cleanly, or it doesn't get merged.
 
@@ -143,23 +143,23 @@ Goal: player can understand the run state and make level-up choices.
 
 ---
 
-## M7 — Talent Trees & Meta-Progression  `Status: Not Started`
+## M7 — Talent Trees & Meta-Progression  `Status: Done`
 
 Goal: runs produce permanent progress that can be spent in 3 talent trees.
 
-- [ ] Post-run reward calculation placeholder (time survived, enemies killed, story progress — exact formula TBD).
-- [ ] 3 talent tree data structures, initially with 10 placeholder test Talents per tree.
-- [ ] Talent screen UI.
-- [ ] First pass allows free spending across all 3 trees.
-- [ ] Later main-school selection and secondary-tree spending threshold remain TBD.
-- [ ] Talents can grant permanent passive Buffs.
-- [ ] Talents can unlock mana-using Spells for future runs.
-- [ ] Temporary testing controls: Talent reset button and game-master infinite-points toggle.
-- [ ] Save / load permanent talent choices and unlocked spells.
-- [ ] Save / load latest 100 Run History entries per slot.
-- [ ] Autosave permanent progression after talent purchase, unlocks, settings changes, and run rewards.
-- [ ] Active run checkpoint autosaves every 30 seconds and after level-up choices.
-- [ ] Forfeiting interrupted runs deletes active run checkpoint and grants no rewards for MVP.
+- [x] Post-run reward calculation placeholder (flat `TALENT_POINTS_PER_RUN` on completed runs; time/kills/story formula deferred to M9).
+- [x] 3 talent tree data structures, initially with 10 placeholder test Talents per tree (Ember, Frost, Arcane).
+- [x] Talent screen UI (WotLK-style tiered grid, rank badges, arrows, tooltips — visual style only).
+- [x] First pass allows free spending across all 3 trees.
+- [~] Later main-school selection and secondary-tree spending threshold remain TBD (deferred by design).
+- [x] Talents can grant permanent passive Buffs (permanent StatModifiers applied at run start).
+- [x] Talents can unlock Spells for future runs (mana cost deferred; M7 test spells are free).
+- [x] Temporary testing controls: Talent reset button and game-master infinite-points toggle.
+- [x] Save / load permanent talent choices and unlocked spells (`talents` section of profile.json).
+- [x] Save / load latest 100 Run History entries per slot (M6).
+- [x] Autosave permanent progression after talent purchase, unlocks, settings changes, and run rewards.
+- [x] Active run checkpoint autosaves every 10 seconds and after level-up choices (M6).
+- [x] Forfeiting interrupted runs deletes active run checkpoint and grants no rewards for MVP (M6).
 
 ---
 
@@ -283,6 +283,7 @@ Goal: 1.0 release.
 
 ## Changelog
 
+- v0.16 - M7 Talent Trees & Meta-Progression completed: TalentManager autoload, TalentData/TalentTreeData, 3 trees (Ember/Frost/Arcane) with permanent modifiers and 6 spell unlocks, WotLK-style Talent Tree UI, talent progression saved in profile.json, flat post-run talent points. Active milestone advanced to M8.
 - v0.15 - M6 Run UI Pass completed: Save Slot Select, Resume/Forfeit modal, Profile Hub, Map Select, Run History (list + details), Character Stats (out-of-run + in-run), Pause Menu, Autosave Indicator, HUD vitals, thin 5-slot SaveManager runtime with atomic JSON writes.
 - v0.14 - M5 Data-Driven Content completed: Five Minute Gauntlet map, timed victory, compounding spawn, weighted enemies, spell/buff leveling.
 - v0.13 - M5 design approved: Five Minute Gauntlet first map spec, spell/buff leveling, tank enemy. Implementation not started.

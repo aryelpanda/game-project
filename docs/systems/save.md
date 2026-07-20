@@ -31,8 +31,9 @@ Persist all player progression safely with fixed save slots and autosave-only be
 - [x] File format: JSON via `FileAccess`, one folder per slot — M6
 - [x] Version field on every payload — M6
 - [x] Registry of saveable systems (`register_saveable` / `unregister_saveable` API)
-- [ ] Talent tree save data (M7)
-- [ ] Meta-currency / post-run reward save data (M7)
+- [x] Saveable registry wired into profile persistence (`profile.json` sections) — M7
+- [x] Talent tree save data (`talents` section via `TalentManager`) — M7
+- [x] Meta-currency / post-run reward save data (`talent_currency`) — M7
 - [x] Run history save data (`run_history.json`, cap 100) — M6
 - [~] Map unlock save data (default pool per profile; runtime unlocks in M7)
 - [x] Active run checkpoint save / load (`active_run.json`) — M6
@@ -166,7 +167,11 @@ user://saves/
     metadata.json
 ```
 
-`profile.json` stores permanent progression.
+`profile.json` stores permanent progression. It holds the slot metadata plus
+one section per registered saveable system, keyed by its registry id (e.g.
+`"talents"`). On `select_slot`, each saveable is hydrated via `from_save_dict`
+with its section; `save_current_profile` re-collects every saveable's
+`to_save_dict`. On new profile / slot unload, saveables reset to defaults.
 
 `active_run.json` stores only the current interrupted run checkpoint.
 

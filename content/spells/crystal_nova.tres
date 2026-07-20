@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="SpellData" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://systems/skills/spell_data.gd" id="1_spell"]
+[ext_resource type="Script" path="res://systems/projectiles/projectile_data.gd" id="2_projectile"]
+[ext_resource type="SpriteFrames" path="res://assets/spells/fireball/fireball_frames.tres" id="3_frames"]
+
+[sub_resource type="Resource" id="ProjectileData_crystal_nova"]
+script = ExtResource("2_projectile")
+speed = 300.0
+lifetime = 2.0
+pierce_count = 2
+collision_mask = 2
+radius = 14.0
+sprite_frames = ExtResource("3_frames")
+animation_name = &"spin"
+visual_size_multiplier = 2.0
+
+[resource]
+script = ExtResource("1_spell")
+id = &"crystal_nova"
+display_name = "Crystal Nova"
+description = "Talent-granted: releases a burst of piercing frost crystals."
+level_up_effect_text = "Unlocks Crystal Nova"
+spell_type = &"auto_projectile"
+cooldown = 3.2
+mana_cost = 0.0
+is_talent_granted = true
+base_damage = 40.0
+damage_type = &"frost"
+projectile_data = SubResource("ProjectileData_crystal_nova")

@@ -15,6 +15,9 @@ signal run_powers_changed()
 const DEFAULT_PROGRESSION_PATH := "res://content/run/m4_default_progression.tres"
 const MAIN_SCENE_PATH := "res://scenes/main/Main.tscn"
 const CHECKPOINT_INTERVAL_SECONDS := 10.0
+## Flat talent-point reward for a completed (non-forfeit) run. Placeholder for
+## M7; replaced by a real formula during M9 balance.
+const TALENT_POINTS_PER_RUN := 3
 
 var _state: RunState = RunState.NOT_STARTED
 var _map_id: StringName = &""
@@ -138,6 +141,7 @@ func end_run(reason: StringName) -> RunSummary:
 	_stop_horde_spawner()
 
 	var summary := _build_summary(reason)
+	_award_talent_points(summary)
 	_clear_player_run_powers()
 	run_ended.emit(summary)
 
@@ -145,6 +149,16 @@ func end_run(reason: StringName) -> RunSummary:
 	SaveManager.clear_active_run()
 
 	return summary
+
+
+func _award_talent_points(summary: RunSummary) -> void:
+	# Forfeited and debug-ended runs grant no permanent rewards (MVP rule).
+	if summary.end_reason == &"forfeit" or summary.end_reason == &"debug_end":
+		return
+	if not SaveManager.has_current_slot():
+		return
+	summary.talent_points_awarded = TALENT_POINTS_PER_RUN
+	TalentManager.add_points(TALENT_POINTS_PER_RUN)
 
 
 func add_experience(amount: int) -> void:

@@ -38,6 +38,10 @@ func _ready() -> void:
 	if run_spells:
 		run_spells.setup(self)
 
+	# Apply permanent Talent effects before deriving starting health / mana so
+	# +max health / +max mana talents affect the values the player spawns with.
+	TalentManager.apply_to_player(self)
+
 	max_health = stats.get_stat(&"max_health")
 	current_health = max_health
 	max_mana = stats.get_stat(&"max_mana")

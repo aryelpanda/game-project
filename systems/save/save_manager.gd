@@ -92,6 +92,8 @@ func create_slot(slot: int, character_name: String) -> bool:
 		return false
 
 	_ensure_slot_dir(slot)
+	# A brand-new profile starts from default progression state.
+	_reset_saveables()
 
 	var meta := SaveMetadata.new()
 	meta.slot = slot
@@ -118,6 +120,7 @@ func select_slot(slot: int) -> bool:
 	var meta := get_slot_metadata(slot)
 	_current_slot = slot
 	_current_metadata = meta
+	_hydrate_saveables(_read_json(_profile_path(slot)))
 	current_slot_changed.emit(slot)
 	load_completed.emit(slot)
 	return true
@@ -128,6 +131,7 @@ func unload_current_slot() -> void:
 		return
 	_current_slot = -1
 	_current_metadata = null
+	_reset_saveables()
 	current_slot_changed.emit(-1)
 
 
@@ -304,12 +308,41 @@ func _file_exists(path: String) -> bool:
 func _write_profile(slot: int, meta: SaveMetadata) -> bool:
 	save_started.emit(slot)
 	_ensure_slot_dir(slot)
-	var ok := _write_json_atomic(_profile_path(slot), meta.to_dict())
+	var ok := _write_json_atomic(_profile_path(slot), _collect_profile_payload(meta))
 	if ok:
 		save_completed.emit(slot)
 	else:
 		save_failed.emit(slot, "Failed to write profile.json")
 	return ok
+
+
+func _collect_profile_payload(meta: SaveMetadata) -> Dictionary:
+	# profile.json holds the slot metadata plus one section per registered
+	# saveable system (e.g. "talents"), keyed by its registry id.
+	var payload := meta.to_dict()
+	for id in _saveables.keys():
+		var obj: Object = _saveables[id]
+		if obj and obj.has_method("to_save_dict"):
+			payload[String(id)] = obj.to_save_dict()
+	return payload
+
+
+func _hydrate_saveables(profile_data: Dictionary) -> void:
+	for id in _saveables.keys():
+		var obj: Object = _saveables[id]
+		if obj and obj.has_method("from_save_dict"):
+			obj.from_save_dict(profile_data.get(String(id), {}))
+
+
+func _reset_saveables() -> void:
+	for id in _saveables.keys():
+		var obj: Object = _saveables[id]
+		if not obj:
+			continue
+		if obj.has_method("reset_runtime"):
+			obj.reset_runtime()
+		elif obj.has_method("from_save_dict"):
+			obj.from_save_dict({})
 
 
 func _write_json_atomic(path: String, payload: Dictionary) -> bool:

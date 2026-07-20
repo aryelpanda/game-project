@@ -1,0 +1,80 @@
+[gd_scene load_steps=2 format=3 uid="uid://ctalenttreem7"]
+
+[ext_resource type="Script" path="res://ui/talent_tree/talent_tree_screen.gd" id="1_talent"]
+
+[node name="TalentTreeScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+script = ExtResource("1_talent")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.05, 0.06, 0.09, 1)
+
+[node name="Layout" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 18.0
+offset_right = -24.0
+offset_bottom = -18.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 14
+
+[node name="Header" type="HBoxContainer" parent="Layout"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TitleLabel" type="Label" parent="Layout/Header"]
+layout_mode = 2
+text = "Talents"
+theme_override_font_sizes/font_size = 26
+
+[node name="Spacer" type="Control" parent="Layout/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PointsLabel" type="Label" parent="Layout/Header"]
+layout_mode = 2
+text = "Points: 0"
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 20
+
+[node name="GameMasterCheck" type="CheckButton" parent="Layout/Header"]
+layout_mode = 2
+text = "Game Master"
+
+[node name="ResetButton" type="Button" parent="Layout/Header"]
+layout_mode = 2
+custom_minimum_size = Vector2(120, 36)
+text = "Reset"
+
+[node name="TreesScroll" type="ScrollContainer" parent="Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TreesRow" type="HBoxContainer" parent="Layout/TreesScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 24
+
+[node name="Footer" type="HBoxContainer" parent="Layout"]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="Layout/Footer"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 36)
+text = "Back"

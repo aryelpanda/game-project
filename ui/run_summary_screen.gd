@@ -34,6 +34,9 @@ func _on_run_ended(summary: RunSummary) -> void:
 		"Level: %d" % summary.final_level,
 	]
 
+	if summary.talent_points_awarded > 0:
+		lines.append("Talent Points Earned: +%d" % summary.talent_points_awarded)
+
 	lines.append("")
 	lines.append("Spells:")
 	if summary.spell_powers.is_empty():

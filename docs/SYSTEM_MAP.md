@@ -1,6 +1,6 @@
 # SYSTEM_MAP.md
 
-Version: 0.10
+Version: 0.11
 
 > Index of every system. The AI reads this first to know where things live. Keep it accurate. When a system is added, renamed, or removed, this file MUST be updated in the same change.
 
@@ -55,6 +55,7 @@ Each row lists a system, its design doc, its code folder, and a one-line respons
 | ---------------- | ------------------------------------------------------- |
 | `Core`           | Global initialization and game state.                   |
 | `SaveManager`    | Slot selection, autosave, profile saves, Run History, active run checkpoints. |
+| `TalentManager`  | Permanent Talent Tree progression: points, spent ranks, effect application, save shape. |
 | `AudioManager`   | Audio buses and playback.                               |
 | `UIManager`      | Top-level UI stack, modal management.                   |
 | `RunManager`     | Coordinates current run state, timer, XP, rewards.      |
@@ -92,6 +93,7 @@ See [CONTENT.md](CONTENT.md) for the full policy. Quick reference:
 
 ## Changelog
 
+- v0.11 - registered TalentManager autoload; M7 Talent Trees & meta-progression runtime added.
 - v0.10 - registered RunManager and World autoloads; M3 horde/run loop runtime added.
 - v0.9 - registered DamageManager autoload; M2 combat/projectile/enemy runtime added.
 - v0.8 - enemies gained per-enemy stat blocks and at least one SpellData-based skill; added enemy_skills content location.

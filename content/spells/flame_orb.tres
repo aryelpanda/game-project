@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="SpellData" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://systems/skills/spell_data.gd" id="1_spell"]
+[ext_resource type="Script" path="res://systems/projectiles/projectile_data.gd" id="2_projectile"]
+[ext_resource type="SpriteFrames" path="res://assets/spells/fireball/fireball_frames.tres" id="3_frames"]
+
+[sub_resource type="Resource" id="ProjectileData_flame_orb"]
+script = ExtResource("2_projectile")
+speed = 340.0
+lifetime = 3.0
+pierce_count = 1
+collision_mask = 2
+radius = 12.0
+sprite_frames = ExtResource("3_frames")
+animation_name = &"spin"
+visual_size_multiplier = 2.0
+
+[resource]
+script = ExtResource("1_spell")
+id = &"flame_orb"
+display_name = "Flame Orb"
+description = "Talent-granted: launches a piercing flaming orb on a timer."
+level_up_effect_text = "Unlocks Flame Orb"
+spell_type = &"auto_projectile"
+cooldown = 2.4
+mana_cost = 0.0
+is_talent_granted = true
+base_damage = 30.0
+damage_type = &"fire"
+projectile_data = SubResource("ProjectileData_flame_orb")

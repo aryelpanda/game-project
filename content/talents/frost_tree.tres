@@ -1,0 +1,200 @@
+[gd_resource type="Resource" script_class="TalentTreeData" load_steps=24 format=3]
+
+[ext_resource type="Script" path="res://systems/skills/talent_tree_data.gd" id="1_tree"]
+[ext_resource type="Script" path="res://systems/skills/talent_data.gd" id="2_talent"]
+[ext_resource type="Script" path="res://systems/stats/stat_modifier.gd" id="3_mod"]
+[ext_resource type="Resource" path="res://content/spells/ice_lance.tres" id="4_ice_lance"]
+[ext_resource type="Resource" path="res://content/spells/crystal_nova.tres" id="5_crystal_nova"]
+
+[sub_resource type="Resource" id="Mod_frost_clear_mind"]
+script = ExtResource("3_mod")
+stat = &"max_mana"
+type = &"flat"
+value = 5.0
+lifetime = &"permanent"
+display_name = "+5 max mana / rank"
+
+[sub_resource type="Resource" id="Mod_frost_steady_steps"]
+script = ExtResource("3_mod")
+stat = &"move_speed"
+type = &"percent_add"
+value = 0.03
+lifetime = &"permanent"
+display_name = "+3% move speed / rank"
+
+[sub_resource type="Resource" id="Mod_frost_cool_flow"]
+script = ExtResource("3_mod")
+stat = &"cooldown_reduction"
+type = &"percent_add"
+value = 0.03
+lifetime = &"permanent"
+display_name = "+3% cooldown reduction / rank"
+
+[sub_resource type="Resource" id="Mod_frost_wide_freeze"]
+script = ExtResource("3_mod")
+stat = &"area_size"
+type = &"percent_add"
+value = 0.05
+lifetime = &"permanent"
+display_name = "+5% area size / rank"
+
+[sub_resource type="Resource" id="Mod_frost_mana_spring"]
+script = ExtResource("3_mod")
+stat = &"mana_regen"
+type = &"flat"
+value = 0.5
+lifetime = &"permanent"
+display_name = "+0.5 mana regen / rank"
+
+[sub_resource type="Resource" id="Mod_frost_resilience"]
+script = ExtResource("3_mod")
+stat = &"max_health"
+type = &"flat"
+value = 10.0
+lifetime = &"permanent"
+display_name = "+10 max health / rank"
+
+[sub_resource type="Resource" id="Mod_frost_glacial_armor"]
+script = ExtResource("3_mod")
+stat = &"armor"
+type = &"flat"
+value = 3.0
+lifetime = &"permanent"
+display_name = "+3 armor / rank"
+
+[sub_resource type="Resource" id="Mod_frost_long_chill"]
+script = ExtResource("3_mod")
+stat = &"duration"
+type = &"percent_add"
+value = 0.05
+lifetime = &"permanent"
+display_name = "+5% duration / rank"
+
+[sub_resource type="Resource" id="Talent_frost_clear_mind"]
+script = ExtResource("2_talent")
+id = &"frost_clear_mind"
+tree_id = &"frost"
+display_name = "Clear Mind"
+description = "Increases maximum mana by 5 per rank."
+max_rank = 5
+cost_per_rank = 1
+tier = 0
+column = 0
+effect_modifiers = [SubResource("Mod_frost_clear_mind")]
+
+[sub_resource type="Resource" id="Talent_frost_steady_steps"]
+script = ExtResource("2_talent")
+id = &"frost_steady_steps"
+tree_id = &"frost"
+display_name = "Steady Steps"
+description = "Increases move speed by 3% per rank."
+max_rank = 3
+cost_per_rank = 1
+tier = 0
+column = 2
+effect_modifiers = [SubResource("Mod_frost_steady_steps")]
+
+[sub_resource type="Resource" id="Talent_frost_cool_flow"]
+script = ExtResource("2_talent")
+id = &"frost_cool_flow"
+tree_id = &"frost"
+display_name = "Cool Flow"
+description = "Reduces cooldowns by 3% per rank."
+max_rank = 3
+cost_per_rank = 1
+tier = 1
+column = 0
+effect_modifiers = [SubResource("Mod_frost_cool_flow")]
+
+[sub_resource type="Resource" id="Talent_frost_wide_freeze"]
+script = ExtResource("2_talent")
+id = &"frost_wide_freeze"
+tree_id = &"frost"
+display_name = "Wide Freeze"
+description = "Increases area size by 5% per rank."
+max_rank = 3
+cost_per_rank = 1
+tier = 1
+column = 2
+effect_modifiers = [SubResource("Mod_frost_wide_freeze")]
+
+[sub_resource type="Resource" id="Talent_frost_ice_lance"]
+script = ExtResource("2_talent")
+id = &"frost_ice_lance"
+tree_id = &"frost"
+display_name = "Ice Lance"
+description = "Unlocks the Ice Lance spell for future runs."
+max_rank = 1
+cost_per_rank = 1
+tier = 2
+column = 1
+requires = &"frost_clear_mind"
+unlock_spell = ExtResource("4_ice_lance")
+
+[sub_resource type="Resource" id="Talent_frost_mana_spring"]
+script = ExtResource("2_talent")
+id = &"frost_mana_spring"
+tree_id = &"frost"
+display_name = "Mana Spring"
+description = "Increases mana regeneration by 0.5 per rank."
+max_rank = 3
+cost_per_rank = 1
+tier = 2
+column = 3
+effect_modifiers = [SubResource("Mod_frost_mana_spring")]
+
+[sub_resource type="Resource" id="Talent_frost_resilience"]
+script = ExtResource("2_talent")
+id = &"frost_resilience"
+tree_id = &"frost"
+display_name = "Resilience"
+description = "Increases maximum health by 10 per rank."
+max_rank = 5
+cost_per_rank = 1
+tier = 3
+column = 0
+effect_modifiers = [SubResource("Mod_frost_resilience")]
+
+[sub_resource type="Resource" id="Talent_frost_glacial_armor"]
+script = ExtResource("2_talent")
+id = &"frost_glacial_armor"
+tree_id = &"frost"
+display_name = "Glacial Armor"
+description = "Increases armor by 3 per rank."
+max_rank = 3
+cost_per_rank = 1
+tier = 3
+column = 2
+effect_modifiers = [SubResource("Mod_frost_glacial_armor")]
+
+[sub_resource type="Resource" id="Talent_frost_long_chill"]
+script = ExtResource("2_talent")
+id = &"frost_long_chill"
+tree_id = &"frost"
+display_name = "Long Chill"
+description = "Increases effect duration by 5% per rank."
+max_rank = 3
+cost_per_rank = 1
+tier = 4
+column = 1
+effect_modifiers = [SubResource("Mod_frost_long_chill")]
+
+[sub_resource type="Resource" id="Talent_frost_crystal_nova"]
+script = ExtResource("2_talent")
+id = &"frost_crystal_nova"
+tree_id = &"frost"
+display_name = "Crystal Nova"
+description = "Unlocks the Crystal Nova spell for future runs."
+max_rank = 1
+cost_per_rank = 1
+tier = 5
+column = 2
+requires = &"frost_ice_lance"
+unlock_spell = ExtResource("5_crystal_nova")
+
+[resource]
+script = ExtResource("1_tree")
+id = &"frost"
+display_name = "Frost"
+theme_color = Color(0.35, 0.65, 0.95, 1)
+talents = [SubResource("Talent_frost_clear_mind"), SubResource("Talent_frost_steady_steps"), SubResource("Talent_frost_cool_flow"), SubResource("Talent_frost_wide_freeze"), SubResource("Talent_frost_ice_lance"), SubResource("Talent_frost_mana_spring"), SubResource("Talent_frost_resilience"), SubResource("Talent_frost_glacial_armor"), SubResource("Talent_frost_long_chill"), SubResource("Talent_frost_crystal_nova")]

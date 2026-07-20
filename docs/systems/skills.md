@@ -1,6 +1,6 @@
 # Skills System
 
-Status: In Progress
+Status: MVP
 
 ## Goal
 
@@ -20,12 +20,13 @@ Own Spells and Talent Trees. This system separates temporary in-run powers from 
 ## Current Status
 
 - [x] `SpellData` Resource
-- [ ] `TalentTreeData` / `TalentData` Resources
+- [x] `TalentTreeData` / `TalentData` Resources — M7
 - [x] Runtime temporary spell registry (`RunSpellController` on Player)
 - [x] Temporary run reward application (via RunManager → Player)
-- [ ] Talent unlock / upgrade API
+- [x] Talent unlock / upgrade API (`TalentManager` autoload) — M7
 - [x] Spell leveling on repeat level-up picks (`upgrade_spell`, `get_spell_level`)
-- [ ] Passive Talent -> Buff registration
+- [x] Passive Talent -> permanent Stat modifier registration (`apply_to_player`) — M7
+- [x] Talent-granted Spell unlocks applied at run start — M7
 - [x] First-pass Talent Tree design documented for testing
 
 ## Design Rules
@@ -157,23 +158,73 @@ func get_active_spells() -> Array[SpellData]
 func has_spell(spell_id: StringName) -> bool
 ```
 
+Talent data resources (M7):
+
 ```gdscript
-class_name TalentProgression
+class_name TalentData
+extends Resource
+
+@export var id: StringName
+@export var tree_id: StringName
+@export var display_name: String
+@export var description: String
+@export var icon: Texture2D           # optional; colored placeholder if null
+@export var max_rank: int
+@export var cost_per_rank: int
+@export var tier: int                 # grid row (WotLK-style layout)
+@export var column: int               # grid column
+@export var requires: StringName      # prerequisite id (arrows only in MVP)
+@export var effect_modifiers: Array[StatModifier]  # permanent, per rank
+@export var unlock_spell: SpellData   # optional permanent Spell unlock
+```
+
+```gdscript
+class_name TalentTreeData
+extends Resource
+
+@export var id: StringName
+@export var display_name: String
+@export var theme_color: Color
+@export var icon: Texture2D
+@export var talents: Array[TalentData]
+```
+
+`TalentManager` autoload (M7) owns permanent progression and is registered as
+the `&"talents"` SaveManager saveable:
+
+```gdscript
+# TalentManager  # autoload
 
 signal talent_points_changed(points: int)
 signal talent_rank_changed(talent_id: StringName, rank: int)
-signal talent_spell_unlocked(spell_id: StringName)
 signal talents_reset()
+signal talents_loaded()
 
+func get_trees() -> Array[TalentTreeData]
+func get_talent(talent_id: StringName) -> TalentData
+func get_rank(talent_id: StringName) -> int
 func available_points() -> int
 func spent_points(tree_id: StringName = &"") -> int
+func add_points(amount: int) -> void            # run rewards
 func can_unlock(talent_id: StringName) -> bool
 func unlock_talent(talent_id: StringName) -> bool
+func refund_talent(talent_id: StringName) -> bool
 func reset_talents() -> void
+func is_game_master() -> bool
 func set_game_master_enabled(enabled: bool) -> void
+func apply_to_player(player: Node) -> void       # called from Player._ready()
+func get_permanent_preview() -> StatsBlock       # for Character Stats screen
 func to_save_dict() -> Dictionary
 func from_save_dict(data: Dictionary) -> void
+func reset_runtime() -> void                     # on slot unload / new profile
 ```
+
+Mutations (unlock / refund / reset / GM toggle / add_points) autosave the
+profile via `SaveManager.save_current_profile()` when a slot is loaded.
+Talent effects are applied to the freshly spawned player at `Player._ready()`
+(before starting health / mana are derived): each spent rank adds the talent's
+`effect_modifiers` to the player `StatsBlock` under a `talent:<id>` source, and
+`unlock_spell` talents are granted to the run spell controller.
 
 ## Dependencies
 
@@ -185,12 +236,16 @@ func from_save_dict(data: Dictionary) -> void
 
 ## Open Questions
 
-- The three Talent Tree themes are not decided yet.
-- Tree / grid / linear list structure?
 - Final respec rules and cost. The first implementation has a free testing reset button.
-- Post-run talent currency source / formula?
-- Which talent-granted Spells cost mana, and how much?
-- Main-school point threshold before secondary-tree spending.
+- Post-run talent currency source / formula. M7 uses a flat `3` points per completed run (`RunManager.TALENT_POINTS_PER_RUN`); a real formula is deferred to M9 balance.
+- Which talent-granted Spells cost mana, and how much? M7 test spells use `mana_cost = 0`; mana enforcement for talent Spells is deferred.
+- Placeholder stat keys (`cooldown_reduction`, `area_size`, `mana_regen`, `armor`, `projectile_count`, `duration`, `pickup_radius`, `projectile_speed`, `xp_gain`) are stored on the StatsBlock now but not yet consumed by gameplay; wired in M9.
+- Main-school point threshold before secondary-tree spending (deferred; MVP is free-spend).
+
+Resolved in M7:
+
+- Themes: Ember (fire), Frost (ice), Arcane (purple) placeholder schools.
+- Layout: WoW WotLK-style tiered grid (tier rows / columns) with decorative prerequisite arrows. Visual style only — no tier-gating in the free-spend MVP.
 
 ## References
 

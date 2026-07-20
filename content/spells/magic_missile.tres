@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="SpellData" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://systems/skills/spell_data.gd" id="1_spell"]
+[ext_resource type="Script" path="res://systems/projectiles/projectile_data.gd" id="2_projectile"]
+[ext_resource type="SpriteFrames" path="res://assets/spells/fireball/fireball_frames.tres" id="3_frames"]
+
+[sub_resource type="Resource" id="ProjectileData_magic_missile"]
+script = ExtResource("2_projectile")
+speed = 480.0
+lifetime = 2.4
+pierce_count = 0
+collision_mask = 2
+radius = 8.0
+sprite_frames = ExtResource("3_frames")
+animation_name = &"spin"
+visual_size_multiplier = 1.5
+
+[resource]
+script = ExtResource("1_spell")
+id = &"magic_missile"
+display_name = "Magic Missile"
+description = "Talent-granted: fires a quick arcane missile on a short timer."
+level_up_effect_text = "Unlocks Magic Missile"
+spell_type = &"auto_projectile"
+cooldown = 1.2
+mana_cost = 0.0
+is_talent_granted = true
+base_damage = 18.0
+damage_type = &"arcane"
+projectile_data = SubResource("ProjectileData_magic_missile")
